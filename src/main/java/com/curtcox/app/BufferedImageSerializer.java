@@ -27,13 +27,13 @@ final class BufferedImageSerializer {
 
 
     ByteBuffer getPixelBytes() {
-        final int[] dataElements = dataElements(raster);
+        final int[] dataElements = dataElements();
         final int         length = Array.getLength(dataElements);
         ByteBuffer        buffer = writeToBuffer(dataElements,numBands,length);
         return encoded(buffer,numBands,length);
     }
 
-    int[] dataElements(WritableRaster raster) {
+    int[] dataElements() {
         return (int[]) raster.getDataElements(0, 0, dim.width, dim.height, null);
     }
 
