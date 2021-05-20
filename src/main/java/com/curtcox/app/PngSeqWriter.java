@@ -150,7 +150,7 @@ public final class PngSeqWriter
     }
 
     private ByteBuffer getPixelBytes(BufferedImage image) {
-        return new BufferedImageSerializer(image,encoder).getPixelBytes();
+        return new BufferedImageSerializer(image,encoder).encode();
     }
 
     static Dimension dim(BufferedImage image) {

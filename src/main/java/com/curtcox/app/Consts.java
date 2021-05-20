@@ -50,4 +50,6 @@ final class Consts {
         return PNG_SIG.clone();
     }
 
+    static final int bands = 3;
+
 }

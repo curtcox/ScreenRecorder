@@ -6,14 +6,13 @@ final class Encoder {
 
     private final int width;
     private final int height;
-    private final int bytesPerPixel;
     private final int bytesPerLine;
+    private static final int bytesPerPixel = Consts.bands;
     private static final byte INDEX = 0;
 
-    public Encoder(int width, int height, int bytesPerPixel) {
+    public Encoder(int width, int height) {
         this.width = width;
         this.height = height;
-        this.bytesPerPixel = bytesPerPixel;
         bytesPerLine = width * bytesPerPixel;
     }
 
@@ -38,16 +37,28 @@ final class Encoder {
     }
 
     private void checkSize(ByteBuffer in, ByteBuffer out) {
-        if (out.capacity() != (width * bytesPerPixel + 1) * height) {
-            String message = "Invalid output buffer capacity: capacity != (width*bpp+1)*height, " +
-                    out.capacity() + "!=" + (width * bytesPerPixel + 1) * height;
-            throw new IllegalArgumentException(message);
-        }
-        if (in.remaining() != width * height * bytesPerPixel) {
-            String message = "Invalid input buffer capacity: capacity != width*bpp*height, "
+        checkInputCapacity(in);
+        checkOutputCapacity(out);
+    }
+
+    private void checkInputCapacity(ByteBuffer in) {
+        if (in.remaining() != requiredInputCapacity()) {
+            String message = "Invalid input buffer capacity: capacity != width*bytesPerPixel*height, "
                     + in.capacity() + "!=" + width * bytesPerPixel * height;
             throw new IllegalArgumentException(message);
         }
     }
+
+    private void checkOutputCapacity(ByteBuffer out) {
+        if (out.capacity() != requiredOutputCapacity()) {
+            String message = "Invalid output buffer capacity: capacity != (width*bytesPerPixel+1)*height, " +
+                    out.capacity() + "!=" + (width * bytesPerPixel + 1) * height;
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+
+    int requiredInputCapacity()  { return width * height * bytesPerPixel; }
+    int requiredOutputCapacity() { return (width * bytesPerPixel + 1) * height; }
 
 }

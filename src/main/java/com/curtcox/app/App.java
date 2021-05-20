@@ -24,8 +24,7 @@ public final class App {
     }
 
     private PngSeqWriter newWriter(int count) throws IOException {
-        int bands = screenshot().getRaster().getNumBands();
-        Encoder encoder = new Encoder(screenSize.width,screenSize.height,bands);
+        Encoder encoder = new Encoder(screenSize.width,screenSize.height);
         return new PngSeqWriter(fileName, encoder, count);
     }
 
