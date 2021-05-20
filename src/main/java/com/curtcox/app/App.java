@@ -24,8 +24,8 @@ public final class App {
     }
 
     private PngSeqWriter newWriter(int count) throws IOException {
-        Encoder encoder = new Encoder(screenSize.width,screenSize.height);
-        return new PngSeqWriter(fileName, encoder, count);
+        FilterNone filterNone = new FilterNone(screenSize.width,screenSize.height);
+        return new PngSeqWriter(fileName, filterNone, count);
     }
 
     private void writeImage(PngSeqWriter writer) throws IOException {

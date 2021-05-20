@@ -15,14 +15,14 @@ public final class PngSeqWriter
     private int sequenceNumber;
     private boolean closed = false;
 
-    private final Encoder encoder;
+    private final Filter filter;
     private final int max;
     private final ByteChannel out;
     private static final int fpsNum = 1;
     private static final int fpsDen = 10;
 
-    public PngSeqWriter(File f, Encoder encoder, int max) throws FileNotFoundException {
-        this.encoder = encoder;
+    public PngSeqWriter(File f, Filter filter, int max) throws FileNotFoundException {
+        this.filter = filter;
         this.max = max;
         out = new RandomAccessFile(f, "rw").getChannel();
     }
@@ -150,7 +150,7 @@ public final class PngSeqWriter
     }
 
     private ByteBuffer getPixelBytes(BufferedImage image) {
-        return new BufferedImageSerializer(image,encoder).encode();
+        return new PngImageEncoder(image, filter).encode();
     }
 
     static Dimension dim(BufferedImage image) {

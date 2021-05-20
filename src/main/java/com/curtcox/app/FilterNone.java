@@ -2,21 +2,27 @@ package com.curtcox.app;
 
 import java.nio.ByteBuffer;
 
-final class Encoder {
+/**
+ * This implements the "None" filter, which amounts to prepending 0 on every row.
+ * https://www.w3.org/TR/PNG/#9Filters
+ */
+final class FilterNone
+    implements Filter
+{
 
     private final int width;
     private final int height;
     private final int bytesPerLine;
     private static final int bytesPerPixel = Consts.bands;
-    private static final byte INDEX = 0;
+    private static final byte FILTER_CODE = 0;
 
-    public Encoder(int width, int height) {
+    FilterNone(int width, int height) {
         this.width = width;
         this.height = height;
         bytesPerLine = width * bytesPerPixel;
     }
 
-    void encode(ByteBuffer in, ByteBuffer out) {
+    public void encode(ByteBuffer in, ByteBuffer out) {
         checkSize(in, out);
         for (int y = 0; y < height; y++) {
             int yoffset = y * bytesPerLine;
@@ -25,7 +31,7 @@ final class Encoder {
     }
 
     private void encodeRow(ByteBuffer in, int srcOffset, ByteBuffer out,int destOffset) {
-        out.put(destOffset++, INDEX);
+        out.put(destOffset++, FILTER_CODE);
         out.position(destOffset);
         out.put(oneLineOfBytes(in,srcOffset));
     }
@@ -56,7 +62,6 @@ final class Encoder {
             throw new IllegalArgumentException(message);
         }
     }
-
 
     int requiredInputCapacity()  { return width * height * bytesPerPixel; }
     int requiredOutputCapacity() { return (width * bytesPerPixel + 1) * height; }

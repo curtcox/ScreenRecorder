@@ -4,15 +4,15 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
-final class BufferedImageSerializer {
+final class PngImageEncoder {
 
     private final Dimension dim;
-    private final Encoder encoder;
+    private final Filter filter;
     private final RasterSerializer raster;
 
-    BufferedImageSerializer(BufferedImage image, Encoder encoder) {
+    PngImageEncoder(BufferedImage image, Filter filter) {
         this.dim     = dim(image);
-        this.encoder = encoder;
+        this.filter  = filter;
         raster       = new RasterSerializer(image);
     }
 
@@ -23,7 +23,7 @@ final class BufferedImageSerializer {
     ByteBuffer encode() {
         ByteBuffer pixelBytes = raster.getPixelBytes();
         ByteBuffer result = ByteBuffer.allocate(bufferSize());
-        encoder.encode(pixelBytes, result);
+        filter.encode(pixelBytes, result);
         result.position(0);
         return result;
     }
