@@ -14,12 +14,17 @@ final class BufferedImageSerializer {
     private final WritableRaster raster;
     private final int numBands;
 
-    BufferedImageSerializer(BufferedImage image, Dimension dim, Encoder encoder) {
-        this.dim    = dim;
+    BufferedImageSerializer(BufferedImage image, Encoder encoder) {
+        this.dim     = dim(image);
         this.encoder = encoder;
-        raster      = image.getRaster();
-        numBands    = raster.getNumBands();
+        raster       = image.getRaster();
+        numBands     = raster.getNumBands();
     }
+
+    private static Dimension dim(BufferedImage image) {
+        return new Dimension(image.getWidth(), image.getHeight());
+    }
+
 
     ByteBuffer getPixelBytes() {
         final int[] dataElements = dataElements(raster);

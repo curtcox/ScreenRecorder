@@ -149,32 +149,35 @@ public final class APNGSeqWriter
         chunkBuffer.putInt(crc(bytes));
     }
 
-    private ByteBuffer getPixelBytes(BufferedImage image, Dimension dim) {
-        return new BufferedImageSerializer(image,dim, encoder).getPixelBytes();
+    private ByteBuffer getPixelBytes(BufferedImage image) {
+        return new BufferedImageSerializer(image,encoder).getPixelBytes();
     }
 
-    static Dimension dimsFromImage(BufferedImage bi) {
-        return new Dimension(bi.getWidth(), bi.getHeight());
+    static Dimension dim(BufferedImage image) {
+        return new Dimension(image.getWidth(), image.getHeight());
     }
 
     private void writeImage(BufferedImage img, int fpsNum, int fpsDen) throws IOException {
         ensureOpen();
-        Dimension dim = dimsFromImage(img);
-        Rectangle rect = new Rectangle(dim);
 
         if (frameCount == 0) {
-            writeImageHeader(rect,img);
+            writeImageHeader(img);
         }
 
-        out.write(makeFCTL(rect, fpsNum, fpsDen, frameCount != 0));
-        out.write(makeDAT(frameCount == 0 ? Consts.IDAT_SIG : Consts.fdAT_SIG, getPixelBytes(img, dim)));
+        out.write(makeFCTL(rectangle(img), fpsNum, fpsDen, frameCount != 0));
+        out.write(makeDAT(frameCount == 0 ? Consts.IDAT_SIG : Consts.fdAT_SIG, getPixelBytes(img)));
         frameCount++;
     }
 
-    private void writeImageHeader(Rectangle key, BufferedImage value) throws IOException {
+    private Rectangle rectangle(BufferedImage img) {
+        Dimension dim = dim(img);
+        return new Rectangle(dim);
+    }
+
+    private void writeImageHeader(BufferedImage value) throws IOException {
         out.write(ByteBuffer.wrap(Consts.getPNGSIGArr()));
         byte bitsPerPlane = 8;
-        out.write(makeIHDRChunk(key.getSize(), numPlanes(value), bitsPerPlane));
+        out.write(makeIHDRChunk(rectangle(value).getSize(), numPlanes(value), bitsPerPlane));
 
         out.write(make_acTLChunk(max, 0));
     }
