@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 
 final class BufferedImageSerializer {
 
@@ -19,13 +18,15 @@ final class BufferedImageSerializer {
         this.encoder = encoder;
         raster       = image.getRaster();
         numBands     = raster.getNumBands();
+        if (numBands != 3) {
+            throw new IllegalArgumentException("Sorry, Dave.");
+        }
     }
 
     private static Dimension dim(BufferedImage image) {
         return new Dimension(image.getWidth(), image.getHeight());
     }
-
-
+    
     ByteBuffer getPixelBytes() {
         final int[] dataElements = dataElements();
         final int         length = Array.getLength(dataElements);
@@ -39,24 +40,10 @@ final class BufferedImageSerializer {
 
     private ByteBuffer writeToBuffer(int[] dataElements, int numBands, int length) {
         ByteBuffer out = ByteBuffer.allocate(length * numBands + 1);
-
-        if (numBands == 4) {
-            writeDataElements(dataElements,length,out.asIntBuffer());
-        } else {
-            writeDataElements(dataElements,length,out);
-        }
-
+        writeDataElements(dataElements,length,out);
         out.position(0);
         out.limit(out.limit() - 1);
         return out;
-    }
-
-    private void writeDataElements(int[] dataElements, int length, IntBuffer intBuffer) {
-        for (int i = 0; i < length; i++) {
-            final int e = dataElements[i];
-            final int a = (e & 0xff000000) >>> 24;
-            intBuffer.put(e << 8 | a);
-        }
     }
 
     private void writeDataElements(int[] dataElements, int length,ByteBuffer out) {
