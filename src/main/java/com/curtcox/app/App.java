@@ -23,13 +23,13 @@ public final class App {
         new App(fileName,new Robot(),screenSize()).writeScreenshots();
     }
 
-    private APNGSeqWriter newWriter(int count) throws IOException {
+    private PngSeqWriter newWriter(int count) throws IOException {
         int bands = screenshot().getRaster().getNumBands();
         Encoder encoder = new Encoder(screenSize.width,screenSize.height,bands);
-        return new APNGSeqWriter(fileName, encoder, count);
+        return new PngSeqWriter(fileName, encoder, count);
     }
 
-    private void writeImage(APNGSeqWriter writer) throws IOException {
+    private void writeImage(PngSeqWriter writer) throws IOException {
         writer.writeImage(screenshot());
     }
 
@@ -43,7 +43,7 @@ public final class App {
 
     private void writeScreenshots() throws IOException {
         int max = 10;
-        APNGSeqWriter writer = newWriter(max);
+        PngSeqWriter writer = newWriter(max);
         for (int i = 0; i < max; i++) {
             writeImage(writer);
             System.out.println(i);

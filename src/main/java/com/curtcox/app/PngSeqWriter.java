@@ -7,7 +7,7 @@ import java.nio.*;
 import java.nio.channels.ByteChannel;
 import java.util.zip.CRC32;
 
-public final class APNGSeqWriter
+public final class PngSeqWriter
         implements Closeable
 {
 
@@ -21,7 +21,7 @@ public final class APNGSeqWriter
     private static final int fpsNum = 1;
     private static final int fpsDen = 10;
 
-    public APNGSeqWriter(File f, Encoder encoder, int max) throws FileNotFoundException {
+    public PngSeqWriter(File f, Encoder encoder, int max) throws FileNotFoundException {
         this.encoder = encoder;
         this.max = max;
         out = new RandomAccessFile(f, "rw").getChannel();
