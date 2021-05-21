@@ -165,8 +165,12 @@ public final class PngSeqWriter
         }
 
         out.write(makeFCTL(rectangle(img), fpsNum, fpsDen, frameCount != 0));
-        out.write(makeDAT(frameCount == 0 ? Consts.IDAT_SIG : Consts.fdAT_SIG, getPixelBytes(img)));
+        out.write(makeDAT(sig(frameCount), getPixelBytes(img)));
         frameCount++;
+    }
+
+    private int sig(int frameCount) {
+        return frameCount == 0 ? Consts.IDAT_SIG : Consts.fdAT_SIG;
     }
 
     private Rectangle rectangle(BufferedImage img) {
