@@ -21,7 +21,7 @@ final class PngImageEncoder {
     }
 
     ByteBuffer encode() {
-        ByteBuffer pixelBytes = raster.getPixelBytes();
+        ByteBuffer pixelBytes = raster.asByteBuffer();
         ByteBuffer result = ByteBuffer.allocate(bufferSize());
         filter.encode(pixelBytes, result);
         result.position(0);
