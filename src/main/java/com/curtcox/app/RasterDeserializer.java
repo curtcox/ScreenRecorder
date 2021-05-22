@@ -8,6 +8,12 @@ import java.awt.image.*;
  */
 final class RasterDeserializer {
 
+    private static final int   redMask = 0x00FF0000;
+    private static final int greenMask = 0x0000FF00;
+    private static final int  blueMask = 0x000000FF;
+    // Robot uses this:
+    private static final DirectColorModel colorModel = new DirectColorModel(24, redMask, greenMask, blueMask);
+
     private static int[] bandmasks(DirectColorModel colorModel) {
         return new int[] { colorModel.getRedMask(), colorModel.getGreenMask(), colorModel.getBlueMask() };
     }
@@ -21,7 +27,6 @@ final class RasterDeserializer {
     }
 
     static BufferedImage image(Image image) {
-        DirectColorModel colorModel = image.colorModel;
         return new BufferedImage(colorModel, raster(colorModel,image), false, null);
     }
 
