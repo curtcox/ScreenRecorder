@@ -8,19 +8,8 @@ import java.awt.image.*;
  */
 final class RasterDeserializer {
 
-    private static DirectColorModel colorModel() {
-        return new DirectColorModel(24,
-                /* red mask */ 0x00FF0000,
-                /* green mask */ 0x0000FF00,
-                /* blue mask */ 0x000000FF);
-    }
-
     private static int[] bandmasks(DirectColorModel colorModel) {
-        int[] bandmasks = new int[3];
-        bandmasks[0] = colorModel.getRedMask();
-        bandmasks[1] = colorModel.getGreenMask();
-        bandmasks[2] = colorModel.getBlueMask();
-        return bandmasks;
+        return new int[] { colorModel.getRedMask(), colorModel.getGreenMask(), colorModel.getBlueMask() };
     }
 
     private static WritableRaster raster(DirectColorModel colorModel,Image image) {
@@ -32,7 +21,7 @@ final class RasterDeserializer {
     }
 
     static BufferedImage image(Image image) {
-        DirectColorModel colorModel = colorModel();
+        DirectColorModel colorModel = image.colorModel;
         return new BufferedImage(colorModel, raster(colorModel,image), false, null);
     }
 
