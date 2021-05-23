@@ -6,5 +6,5 @@ import java.io.IOException;
 
 interface BufferedImageWriter extends Closeable
 {
-    public void writeImage(BufferedImage img) throws IOException;
+    void writeImage(BufferedImage img) throws IOException;
 }

@@ -6,7 +6,8 @@ import java.io.OutputStream;
 
 final class SimpleBufferedImageWriter implements BufferedImageWriter {
 
-    final OutputStream out;
+    private Image last;
+    private final OutputStream out;
 
     SimpleBufferedImageWriter(OutputStream out) {
         this.out = out;
@@ -15,9 +16,14 @@ final class SimpleBufferedImageWriter implements BufferedImageWriter {
     @Override
     public void writeImage(BufferedImage img) throws IOException {
         RasterSerializer serializer = new RasterSerializer(img);
-        Image image = serializer.image();
-        byte[] bytes = Convert.toBytes(image.pixels());
+        Image current = serializer.image();
+        byte[] bytes = diff(last,current);
         out.write(bytes,0,bytes.length);
+        last = current;
+    }
+
+    private byte[] diff(Image a, Image b) {
+        return a == null ? b.bytes() : a.xor(b).bytes();
     }
 
     @Override

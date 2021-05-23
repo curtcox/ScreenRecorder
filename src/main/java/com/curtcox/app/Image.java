@@ -23,13 +23,29 @@ final class Image {
     final Type type;
 
     Image(int[] pixels, int width, int height) {
+        this(Color.RGBA,Type.full,pixels,width,height);
+    }
+
+    Image(Color color, Type type, int[] pixels, int width, int height) {
         this.pixels = pixels;
         this.width = width;
         this.height = height;
-        color = Color.RGBA;
-        type = Type.full;
+        this.color = color;
+        this.type = type;
     }
 
     int[] pixels() { return Arrays.copyOf(pixels,pixels.length); }
+    byte[] bytes() { return Convert.toBytes(pixels); }
 
+    Image xor(Image that) {
+        return new Image(color,Type.delta,xor(pixels,this.pixels),width,height);
+    }
+
+    private static int[] xor(int[] a, int[] b) {
+        int[] c = new int[a.length];
+        for (int i=0; i<a.length; i++) {
+            c[i] = a[i] ^ b[i];
+        }
+        return c;
+    }
 }
