@@ -8,7 +8,7 @@ import java.nio.channels.ByteChannel;
 import java.util.zip.CRC32;
 
 public final class PngSeqWriter
-        implements Closeable
+    implements BufferedImageWriter
 {
 
     private int frameCount = 0;
@@ -33,7 +33,7 @@ public final class PngSeqWriter
         }
     }
 
-    void writeImage(BufferedImage img) throws IOException {
+    public void writeImage(BufferedImage img) throws IOException {
         ensureOpen();
         writeImage(img, fpsNum, fpsDen);
     }

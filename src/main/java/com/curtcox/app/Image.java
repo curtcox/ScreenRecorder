@@ -5,7 +5,7 @@ import java.util.Arrays;
 final class Image {
 
     enum Color {
-        RGB, red, green, blue
+        RGBA, red, green, blue
     }
 
     enum Type {
@@ -26,7 +26,7 @@ final class Image {
         this.pixels = pixels;
         this.width = width;
         this.height = height;
-        color = Color.RGB;
+        color = Color.RGBA;
         type = Type.full;
     }
 
