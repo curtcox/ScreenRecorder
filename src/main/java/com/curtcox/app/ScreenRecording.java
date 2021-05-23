@@ -2,6 +2,8 @@ package com.curtcox.app;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.zip.Deflater;
+import java.util.zip.DeflaterOutputStream;
 
 public final class ScreenRecording {
 
@@ -10,7 +12,14 @@ public final class ScreenRecording {
 
     ScreenRecording(File fileName) {
         this.fileName = fileName;
-        writer = new SimpleBufferedImageWriter();
+//        writer = new SimpleBufferedImageWriter(new MeteredOutputStream(new NullOutputStream())); // 600 Megs per minute
+//        writer = new SimpleBufferedImageWriter(new DeflaterOutputStream(new MeteredOutputStream(new NullOutputStream()))); // 15 mpm
+        // buffer size and compression appear to have relatively little impact (10 - 13 mpm) no matter what
+        writer = new SimpleBufferedImageWriter(
+                new DeflaterOutputStream(
+                        new MeteredOutputStream(new NullOutputStream()),
+                        new Deflater(Deflater.BEST_COMPRESSION), 5120
+                ));
     }
 
     private void writeScreenshots(int max) throws IOException {
