@@ -34,11 +34,12 @@ final class Image {
         this.type = type;
     }
 
-    int[] pixels()        { return Arrays.copyOf(pixels,pixels.length); }
-    byte[] bytes()        { return Convert.toBytes(pixels); }
-    Image xor(Image that) { return new Image(color,Type.delta,xor(pixels,that.pixels),width,height); }
-    Image banded()        { return new Image(Color.banded,type,banded(bytes()),width,height); }
-    Image rgb()           { return new Image(Color.RGB,type,rgb(bytes()),width,height); }
+    int[] pixels() { return Arrays.copyOf(pixels,pixels.length); }
+    byte[] bytes() { return Convert.toBytes(pixels); }
+    Image banded() { return new Image(Color.banded,type,banded(bytes()),width,height); }
+    Image rgb()    { return new Image(Color.RGB,type,rgb(bytes()),width,height); }
+    Image xor(Image that)   { return new Image(color,Type.delta,xor(pixels,that.pixels),width,height); }
+    Image minus(Image that) { return new Image(color,Type.delta,minus(bytes(),that.bytes()),width,height); }
 
     private static int[] banded(byte[] in) {
         int offset = 0;
@@ -77,4 +78,13 @@ final class Image {
         }
         return c;
     }
+
+    private static int[] minus(byte[] a, byte[] b) {
+        byte[] c = new byte[a.length];
+        for (int i=0; i<a.length; i++) {
+            c[i] = (byte) (a[i] - b[i]);
+        }
+        return Convert.toInts(c);
+    }
+
 }
