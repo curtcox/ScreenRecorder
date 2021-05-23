@@ -11,4 +11,13 @@ final class Convert {
         intBuffer.put(data);
         return byteBuffer.array();
     }
+
+    static int[] toInts(byte[] data) {
+        IntBuffer intBuf = ByteBuffer.wrap(data)
+                        .asIntBuffer();
+        int[] array = new int[intBuf.remaining()];
+        intBuf.get(array);
+        return array;
+    }
+
 }

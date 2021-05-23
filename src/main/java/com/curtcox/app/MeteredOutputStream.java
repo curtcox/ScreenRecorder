@@ -49,6 +49,7 @@ public final class MeteredOutputStream extends OutputStream {
 
     @Override
     public void close() throws IOException {
+        report();
         out.close();
     }
 
