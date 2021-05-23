@@ -110,7 +110,7 @@ public final class PngSeqWriter
     }
 
     private ByteBuffer makeDAT(int sig, ByteBuffer buffer) {
-        ByteBuffer compressed = ByteBufferCompressor.compress(buffer);
+        ByteBuffer compressed = Compressor.compress(buffer);
 
         boolean needSeqNum = sig == Consts.fdAT_SIG;
 
