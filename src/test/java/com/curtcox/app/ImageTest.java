@@ -16,7 +16,7 @@ public class ImageTest {
     @Test
     public void default_constructor_is_RGB() {
         Image image = new Image(new int[0],0,0);
-        assertEquals(Image.Color.RGBA, image.color);
+        assertEquals(Image.Color.ARGB, image.color);
     }
 
     @Test

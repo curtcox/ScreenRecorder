@@ -5,7 +5,7 @@ import java.util.Arrays;
 final class Image {
 
     enum Color {
-        RGBA, red, green, blue
+        ARGB, red, green, blue
     }
 
     enum Type {
@@ -23,7 +23,7 @@ final class Image {
     final Type type;
 
     Image(int[] pixels, int width, int height) {
-        this(Color.RGBA,Type.full,pixels,width,height);
+        this(Color.ARGB,Type.full,pixels,width,height);
     }
 
     Image(Color color, Type type, int[] pixels, int width, int height) {
@@ -38,7 +38,7 @@ final class Image {
     byte[] bytes() { return Convert.toBytes(pixels); }
 
     Image xor(Image that) {
-        return new Image(color,Type.delta,xor(pixels,this.pixels),width,height);
+        return new Image(color,Type.delta,xor(pixels,that.pixels),width,height);
     }
 
     private static int[] xor(int[] a, int[] b) {
