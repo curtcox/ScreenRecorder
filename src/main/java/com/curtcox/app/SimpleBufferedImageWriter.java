@@ -18,16 +18,21 @@ final class SimpleBufferedImageWriter implements BufferedImageWriter {
         RasterSerializer serializer = new RasterSerializer(img);
         Image current = serializer.image();
         byte[] bytes = diff(last,current);
+        //print(bytes.length + " bytes -> " + Compressor.compress(bytes).length);
         out.write(bytes,0,bytes.length);
         last = current;
     }
 
     private byte[] diff(Image a, Image b) {
-        return a == null ? b.bytes() : a.xor(b).bytes();
+        return a == null ? b.bytes() : a.xor(b).rgb().trim().bytes();
     }
 
     @Override
     public void close() throws IOException {
         out.close();
+    }
+
+    private static void print(Object o) {
+        System.out.println(o);
     }
 }

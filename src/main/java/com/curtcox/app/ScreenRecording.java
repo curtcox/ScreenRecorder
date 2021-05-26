@@ -10,13 +10,11 @@ public final class ScreenRecording {
     final File fileName;
     final BufferedImageWriter writer;
 
-    ScreenRecording(File fileName) {
+    ScreenRecording(File fileName) throws IOException {
         this.fileName = fileName;
-//        writer = new SimpleBufferedImageWriter(new MeteredOutputStream(new NullOutputStream())); // 600 Megs per minute
-//        writer = new SimpleBufferedImageWriter(new DeflaterOutputStream(new MeteredOutputStream(new NullOutputStream()))); // 15 mpm
-        // buffer size and compression appear to have relatively little impact (10 - 13 mpm) no matter what
         writer = new SimpleBufferedImageWriter(
                 new DeflaterOutputStream(
+//                        new MeteredOutputStream(new FileOutputStream(fileName)),
                         new MeteredOutputStream(new NullOutputStream()),
                         new Deflater(Deflater.BEST_COMPRESSION), 5120
                 ));
@@ -36,8 +34,8 @@ public final class ScreenRecording {
     }
 
     public static void main(String[] args) throws Exception {
-        new ScreenRecording(new File("screenshot.png"))
-                .writeScreenshots(5);
+        new ScreenRecording(new File("screenshot.slog"))
+                .writeScreenshots(10);
     }
 
 }
