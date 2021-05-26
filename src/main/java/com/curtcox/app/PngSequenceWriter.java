@@ -7,8 +7,8 @@ import java.nio.*;
 import java.nio.channels.ByteChannel;
 import java.util.zip.CRC32;
 
-public final class PngSeqWriter
-    implements BufferedImageWriter
+final class PngSequenceWriter
+    implements ImageSequenceWriter
 {
 
     private int frameCount = 0;
@@ -21,7 +21,7 @@ public final class PngSeqWriter
     private static final int fpsNum = 1;
     private static final int fpsDen = 10;
 
-    public PngSeqWriter(File f, Filter filter, int max) throws FileNotFoundException {
+    public PngSequenceWriter(File f, Filter filter, int max) throws FileNotFoundException {
         this.filter = filter;
         this.max = max;
         out = new RandomAccessFile(f, "rw").getChannel();

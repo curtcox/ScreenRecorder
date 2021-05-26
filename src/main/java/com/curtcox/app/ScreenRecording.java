@@ -8,11 +8,11 @@ import java.util.zip.DeflaterOutputStream;
 public final class ScreenRecording {
 
     final File fileName;
-    final BufferedImageWriter writer;
+    final ImageSequenceWriter writer;
 
     ScreenRecording(File fileName) throws IOException {
         this.fileName = fileName;
-        writer = new SimpleBufferedImageWriter(
+        writer = new SimpleImageSequenceWriter(
                 new DeflaterOutputStream(
 //                        new MeteredOutputStream(new FileOutputStream(fileName)),
                         new MeteredOutputStream(new NullOutputStream()),
@@ -35,7 +35,7 @@ public final class ScreenRecording {
 
     public static void main(String[] args) throws Exception {
         new ScreenRecording(new File("screenshot.slog"))
-                .writeScreenshots(10);
+                .writeScreenshots(30);
     }
 
 }

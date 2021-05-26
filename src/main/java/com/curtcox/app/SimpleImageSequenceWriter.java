@@ -4,12 +4,12 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 
-final class SimpleBufferedImageWriter implements BufferedImageWriter {
+final class SimpleImageSequenceWriter implements ImageSequenceWriter {
 
     private Image last;
     private final OutputStream out;
 
-    SimpleBufferedImageWriter(OutputStream out) {
+    SimpleImageSequenceWriter(OutputStream out) {
         this.out = out;
     }
 

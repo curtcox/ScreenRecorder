@@ -13,7 +13,7 @@ public final class AnimatedPngFromScreenRecording {
     }
 
     private void writeScreenshots(int max) throws IOException {
-        PngSeqWriter writer = new PngSeqWriter(fileName, filterNone, max);
+        PngSequenceWriter writer = new PngSequenceWriter(fileName, filterNone, max);
         for (int i = 0; i < max; i++) {
             writer.writeImage(Screen.shot());
             print(i);
