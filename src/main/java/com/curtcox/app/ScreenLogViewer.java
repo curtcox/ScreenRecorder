@@ -9,41 +9,68 @@ import java.awt.image.BufferedImage;
 final class ScreenLogViewer {
 
     final JFrame frame = new JFrame("Viewer");
-    final JSlider slider = new JSlider();
+    final JSlider days = new JSlider();
+    final JSlider minutes = new JSlider();
+    final JSlider seconds = new JSlider();
+    final JTextField search = new JTextField();
     final JLabel imageLabel = new JLabel();
     final int width;
     final int height;
+    final TimeChangeListener listener = new TimeChangeListener();
+
+    private class TimeChangeListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            updateTime();
+        }
+    }
 
     ScreenLogViewer(BufferedImage image) {
         double scale = 0.75;
         width = (int) (image.getWidth() * scale);
         height = (int) (image.getHeight() * scale);
         layout();
+        frame.setVisible(true);
         setImage(image);
-        slider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                setImageIndex(slider.getValue());
-            }
-        });
+        setSize();
+        addListeners();
+        exitOnClose();
+    }
+
+    void setSize() {
+        frame.setSize(width,height);
+        frame.setMinimumSize(new Dimension(width/2,height/2));
+    }
+
+    void exitOnClose() {
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     void layout() {
+        days.setOrientation(JSlider.VERTICAL);
         frame.setLayout(new BorderLayout());
         frame.add(imageLabel,BorderLayout.CENTER);
-        frame.add(slider,BorderLayout.SOUTH);
-        frame.setSize(width,height);
-        frame.setMinimumSize(new Dimension(width/2,height/2));
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.add(search,BorderLayout.NORTH);
+        frame.add(days,BorderLayout.WEST);
+        JPanel south = new JPanel(new GridLayout(0,2));
+        south.add(minutes);
+        south.add(seconds);
+        frame.add(south,BorderLayout.SOUTH);
+    }
+
+    void addListeners() {
+        days.addChangeListener(listener);
+        minutes.addChangeListener(listener);
+        seconds.addChangeListener(listener);
     }
 
     void setImage(BufferedImage image) {
         imageLabel.setIcon(new ImageIcon(image.getScaledInstance(width,height,16)));
     }
 
-    void setImageIndex(int index) {
-        System.out.println(index);
+    void updateTime() {
+        String message = days.getValue() + " " + minutes.getValue() + " " + seconds.getValue();
+        System.out.println(message);
     }
 
     void show() {
