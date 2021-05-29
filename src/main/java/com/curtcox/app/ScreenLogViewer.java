@@ -3,10 +3,13 @@ package com.curtcox.app;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-final class ScreenLogViewer {
+// EDT only
+final class ScreenLogViewer implements ImageDisplay {
 
     final JFrame frame = new JFrame("Viewer");
     final JSlider days = new JSlider();
@@ -14,30 +17,27 @@ final class ScreenLogViewer {
     final JSlider seconds = new JSlider();
     final JTextField search = new JTextField();
     final JLabel imageLabel = new JLabel();
-    final int width;
-    final int height;
-    final TimeChangeListener listener = new TimeChangeListener();
+    final Listener listener = new Listener();
+    final ImageRequestor requestor;
 
-    private class TimeChangeListener implements ChangeListener {
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            updateTime();
-        }
+    // On change, update the request
+    private class Listener implements ChangeListener, DocumentListener {
+        @Override public void stateChanged(ChangeEvent e)    { updateRequest(); }
+        @Override public void insertUpdate(DocumentEvent e)  { updateRequest(); }
+        @Override public void removeUpdate(DocumentEvent e)  { updateRequest(); }
+        @Override public void changedUpdate(DocumentEvent e) { updateRequest(); }
     }
 
-    ScreenLogViewer(BufferedImage image) {
-        double scale = 0.75;
-        width = (int) (image.getWidth() * scale);
-        height = (int) (image.getHeight() * scale);
+    ScreenLogViewer(ImageRequestor requestor, int width, int height) {
+        this.requestor = requestor;
         layout();
         frame.setVisible(true);
-        setImage(image);
-        setSize();
+        setSize(width,height);
         addListeners();
         exitOnClose();
     }
 
-    void setSize() {
+    void setSize(int width,int height) {
         frame.setSize(width,height);
         frame.setMinimumSize(new Dimension(width/2,height/2));
     }
@@ -62,32 +62,19 @@ final class ScreenLogViewer {
         days.addChangeListener(listener);
         minutes.addChangeListener(listener);
         seconds.addChangeListener(listener);
+        search.getDocument().addDocumentListener(listener);
     }
 
-    void setImage(BufferedImage image) {
-        imageLabel.setIcon(new ImageIcon(image.getScaledInstance(width,height,16)));
+    public void setImage(BufferedImage image) {
+        imageLabel.setIcon(new ImageIcon(image.getScaledInstance(image.getWidth(),image.getHeight(),16)));
     }
 
-    void updateTime() {
-        String message = days.getValue() + " " + minutes.getValue() + " " + seconds.getValue();
-        System.out.println(message);
+    void updateRequest() {
+        requestor.request(search.getText(),days.getValue(),minutes.getValue(),seconds.getValue());
     }
 
     void show() {
         frame.setVisible(true);
-    }
-
-    static void main0() {
-        BufferedImage original = Screen.shot();
-        ScreenLogViewer viewer = new ScreenLogViewer(original);
-        viewer.show();
-    }
-
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() { main0(); }
-        });
     }
 
 }
