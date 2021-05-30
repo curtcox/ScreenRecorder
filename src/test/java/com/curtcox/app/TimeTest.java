@@ -7,6 +7,8 @@ import static org.junit.Assert.*;
 public class TimeTest {
 
     static final long A_MINUTE = 60 * 1000;
+    static final long A_DAY    = A_MINUTE * 24 * 60;
+    static final long A_YEAR   = A_DAY    * 365;
 
     @Test
     public void now_is_currentTimeMillis() {
@@ -79,6 +81,46 @@ public class TimeTest {
     @Test
     public void just_before_now_is_not_inTheFuture() {
         assertFalse(new Time(Time.now().t  - 1).inTheFuture());
+    }
+
+    @Test
+    public void time_0_is_midnight_day_1_1970() {
+        Time t = new Time(0);
+        assertEquals(1970,t.year());
+        assertEquals(0,t.day());
+        assertEquals(0,t.minute());
+    }
+
+    @Test
+    public void time_0_plus_a_day_and_a_minute_1970() {
+        Time t = new Time(A_DAY + A_MINUTE);
+        assertEquals(1970,t.year());
+        assertEquals(1,t.day());
+        assertEquals(1,t.minute());
+    }
+
+    @Test
+    public void time_0_minus_a_day_and_a_minute_1969() {
+        Time t = new Time(- A_DAY - A_MINUTE);
+        assertEquals(1969,t.year());
+        assertEquals(365,t.day());
+        assertEquals(59,t.minute());
+    }
+
+    @Test
+    public void time_0_plus_a_year_2_days_and_3_minutes_1971() {
+        Time t = new Time(A_YEAR + 2 * A_DAY + 3 * A_MINUTE);
+        assertEquals(1971,t.year());
+        assertEquals(2,t.day());
+        assertEquals(3,t.minute());
+    }
+
+    @Test
+    public void time_0_minus_a_year_a_day_and_a_minute_1968() {
+        Time t = new Time(- A_YEAR - 2 * A_DAY - 3 * A_MINUTE);
+        assertEquals(1968,t.year());
+        assertEquals(364,t.day());
+        assertEquals(57,t.minute());
     }
 
 }

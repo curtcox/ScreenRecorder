@@ -5,26 +5,25 @@ import java.io.IOException;
 
 final class ScreenRecorder {
 
-    final ImageSequenceWriter writer;
+    final FileTimeMap map;
     final Time endTime;
     final int sleepTime;
 
-    ScreenRecorder(ImageSequenceWriter writer, Time endTime, int sleepTime) {
-        this.writer = writer;
+    ScreenRecorder(FileTimeMap map, Time endTime, int sleepTime) {
+        this.map = map;
         this.endTime = endTime;
         this.sleepTime = sleepTime;
     }
 
-    ScreenRecorder(File fileName) throws IOException {
-        this(SimpleImageSequenceWriter.to(fileName),Time.endOfThisMinute(),500);
-    }
-
-    void writeScreenshots() throws IOException {
+    void record() throws IOException {
         while (endTime.inTheFuture()) {
-            writer.writeImage(Screen.shot());
-            Sleep.millis(sleepTime);
+            minuteRecorder().writeScreenshots();
         }
-        writer.close();
     }
 
+    ScreenMinuteRecorder minuteRecorder() throws IOException {
+        Time now = Time.now();
+        File file = map.file(now);
+        return new ScreenMinuteRecorder(SimpleImageSequenceWriter.to(file),now.endOfThisMinute(),sleepTime);
+    }
 }

@@ -4,7 +4,9 @@ final class Time {
 
     final long t;
 
-    private static int MILLIS_PER_MINUTE = 60 * 1000;
+    private static long MILLIS_PER_MINUTE = 60 * 1000;
+    private static long MILLIS_PER_DAY    = MILLIS_PER_MINUTE * 60 * 24;
+    private static long MILLIS_PER_YEAR   = MILLIS_PER_DAY    * 365;
 
     Time(long t) {
         this.t = t;
@@ -18,13 +20,13 @@ final class Time {
         return new Time((now().totalMinutesSince0() + 1) * MILLIS_PER_MINUTE - 1);
     }
 
-    private long totalMinutesSince0() {
-        return (t / MILLIS_PER_MINUTE);
-    }
+    private long totalMinutesSince0() { return t / MILLIS_PER_MINUTE; }
+    private long totalDaysSince0()    { return t / MILLIS_PER_DAY;    }
+    private long totalYearsSince0()   { return t / MILLIS_PER_YEAR;   }
 
-    int minute() {
-        return (int) (totalMinutesSince0() % 60);
-    }
+    int minute() { return t < 0 ? (int) (60  + totalMinutesSince0() % 60)  : (int) (totalMinutesSince0() % 60); }
+    int day()    { return t < 0 ? (int) (366  + totalDaysSince0() % 365)   : (int) (totalDaysSince0() % 365); }
+    int year()   { return t < 0 ? (int) (1969 + totalYearsSince0())        : (int) (1970 + totalYearsSince0()); }
 
     static Time now() {
         return new Time(System.currentTimeMillis());
@@ -37,5 +39,6 @@ final class Time {
     boolean inTheFuture() {
         return t > System.currentTimeMillis();
     }
+
 
 }
