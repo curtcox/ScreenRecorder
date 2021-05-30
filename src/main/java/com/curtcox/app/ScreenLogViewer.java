@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 // EDT only
-final class ScreenLogViewer implements ImageDisplay {
+final class ScreenLogViewer implements Viewer.Display {
 
     final JFrame frame = new JFrame("Viewer");
     final JSlider days = new JSlider();
@@ -18,7 +18,7 @@ final class ScreenLogViewer implements ImageDisplay {
     final JTextField search = new JTextField();
     final JLabel imageLabel = new JLabel();
     final Listener listener = new Listener();
-    final ImageRequestor requestor;
+    final Viewer.Requestor requestor;
 
     // On change, update the request
     private class Listener implements ChangeListener, DocumentListener {
@@ -28,10 +28,9 @@ final class ScreenLogViewer implements ImageDisplay {
         @Override public void changedUpdate(DocumentEvent e) { updateRequest(); }
     }
 
-    ScreenLogViewer(ImageRequestor requestor, int width, int height) {
+    ScreenLogViewer(Viewer.Requestor requestor, int width, int height) {
         this.requestor = requestor;
         layout();
-        frame.setVisible(true);
         setSize(width,height);
         addListeners();
         exitOnClose();
@@ -70,7 +69,7 @@ final class ScreenLogViewer implements ImageDisplay {
     }
 
     void updateRequest() {
-        requestor.request(search.getText(),days.getValue(),minutes.getValue(),seconds.getValue());
+        requestor.request(new Viewer.Request(search.getText(),days.getValue(),minutes.getValue(),seconds.getValue()));
     }
 
     void show() {

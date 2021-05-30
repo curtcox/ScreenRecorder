@@ -12,9 +12,9 @@ public class ScreenLogViewerTest {
         int height = (int) (image.getHeight() * scale);
 
         // Breaks the threading rules, in addition to being fake
-        class FakeImageRequestor implements ImageRequestor {
-            ImageDisplay display;
-            @Override public void request(String text, int days, int minutes, int seconds) {
+        class FakeImageRequestor implements Viewer.Requestor {
+            Viewer.Display display;
+            @Override public void request(Viewer.Request request) {
                 display.setImage(Screen.shot());
             }
         }
