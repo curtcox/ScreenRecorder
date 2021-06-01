@@ -92,6 +92,38 @@ public class TimeTest {
     }
 
     @Test
+    public void time_0_plus_364_days_is_1970() {
+        Time t = new Time(364 * A_DAY);
+        assertEquals(1970,t.year());
+        assertEquals(364,t.day());
+        assertEquals(0,t.minute());
+    }
+
+    @Test
+    public void time_0_plus_1_year_is_1971() {
+        Time t = new Time(A_YEAR);
+        assertEquals(1971,t.year());
+        assertEquals(0,t.day());
+        assertEquals(0,t.minute());
+    }
+
+    @Test
+    public void time_0_plus_2_years_is_1972() {
+        Time t = new Time(2 * A_YEAR);
+        assertEquals(1972,t.year());
+        assertEquals(0,t.day());
+        assertEquals(0,t.minute());
+    }
+
+    @Test
+    public void time_0_plus_3_years_is_still_1972() {
+        Time t = new Time(3 * A_YEAR);
+        assertEquals(1972,t.year());
+        assertEquals(365,t.day());
+        assertEquals(0,t.minute());
+    }
+
+    @Test
     public void time_0_plus_a_day_and_a_minute_1970() {
         Time t = new Time(A_DAY + A_MINUTE);
         assertEquals(1970,t.year());
@@ -100,10 +132,18 @@ public class TimeTest {
     }
 
     @Test
+    public void time_0_minus_a_minute_1969() {
+        Time t = new Time(- A_MINUTE);
+        assertEquals(1969,t.year());
+        assertEquals(364,t.day());
+        assertEquals(59,t.minute());
+    }
+
+    @Test
     public void time_0_minus_a_day_and_a_minute_1969() {
         Time t = new Time(- A_DAY - A_MINUTE);
         assertEquals(1969,t.year());
-        assertEquals(365,t.day());
+        assertEquals(363,t.day());
         assertEquals(59,t.minute());
     }
 
