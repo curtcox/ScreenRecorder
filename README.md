@@ -30,6 +30,7 @@ The intent is to provide an open solution that things like
 - [PiKVM](https://pikvm.org/),[TinyPilot](https://tinypilotkvm.com/)
 - Cloud storage
 - Lucene, Elasticsearch
+- Alfred, [searchcode](https://github.com/boyter/searchcode-server)
 - others
 
 This code is ultimately a fork of the PNG writer, although you won't see much evidence of that at this point.
