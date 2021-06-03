@@ -7,11 +7,15 @@ final class FileTimeMap {
     File base = new File(".screenshots");
 
     File file(Time time) {
-        return new File(base.getPath() + "/" + "/"  + "/" + "");
+        return new File(base.getPath() +
+                "/" + time.year() +
+                "/" + last(3,time.day() + 1) +
+                "/" + last(4,time.minute() + 1) + ".slog");
     }
-//    ScreenMinuteRecorder(File fileName) throws IOException {
-//        this(SimpleImageSequenceWriter.to(fileName),Time.endOfThisMinute(),500);
-//    }
 
+    private static String last(int count,int number) {
+        String text = "0000" + number;
+        return text.substring(text.length() - count);
+    }
 
 }

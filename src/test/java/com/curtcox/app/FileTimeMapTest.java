@@ -18,5 +18,6 @@ public class FileTimeMapTest {
         assertTrue(full,full.contains("1970"));
         assertTrue(full,full.contains("001"));
         assertTrue(full,full.contains("0001.slog"));
+        assertTrue(full,full.endsWith(".screenshots/1970/001/0001.slog"));
     }
 }
