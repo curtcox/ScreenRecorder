@@ -15,6 +15,7 @@ public class ScreenLogViewerTest {
         class FakeImageRequestor implements Viewer.Requestor {
             Viewer.Display display;
             @Override public void request(Viewer.Request request) {
+                System.out.println(request);
                 display.setImage(Screen.shot());
             }
         }

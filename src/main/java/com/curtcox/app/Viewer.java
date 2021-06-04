@@ -20,13 +20,15 @@ interface Viewer {
 
     final class Request {
 
-        final String text; final int days; final int minutes; final int seconds;
+        final String text; final Time time;
 
-        public Request(String text, int days, int minutes, int seconds) {
+        public Request(String text, Time time) {
             this.text = text;
-            this.days = days;
-            this.minutes = minutes;
-            this.seconds = seconds;
+            this.time = time;
+        }
+
+        @Override public String toString() {
+            return "Request{" + text + ":" + time + "}";
         }
     }
 

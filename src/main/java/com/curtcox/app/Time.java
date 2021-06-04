@@ -5,11 +5,11 @@ final class Time {
 
     final long t;
     private final long timeThisYear;
-    private final long totalMinutesSince0;
     private final int index;
 
     private static long MILLIS_PER_MINUTE     = 60 * 1000;
-    private static long MILLIS_PER_DAY        = MILLIS_PER_MINUTE * 60 * 24;
+    private static long MILLIS_PER_HOUR       = MILLIS_PER_MINUTE * 60;
+    private static long MILLIS_PER_DAY        = MILLIS_PER_HOUR   * 24;
     private static long MILLIS_PER_YEAR       = MILLIS_PER_DAY    * 365;
 
     private static long[] startOfYear = new long[100];
@@ -40,18 +40,26 @@ final class Time {
         throw new IllegalArgumentException(t + " too big : expand table");
     }
 
+    Time(int year, int day, int hour, int minute) {
+        index = year - 1970;
+        timeThisYear = day * MILLIS_PER_DAY + hour * MILLIS_PER_HOUR + minute * MILLIS_PER_MINUTE;
+        t = startOfYear[index] + timeThisYear;
+    }
 
     Time(long t) {
         this.t = t;
         index = indexFor(t);
         timeThisYear = t - startOfYear[index];
-        totalMinutesSince0 = t / MILLIS_PER_MINUTE;
     }
 
-    static Time endOfLastMinute() { return new Time(now().totalMinutesSince0 * MILLIS_PER_MINUTE - 1); }
-    static Time endOfThisMinute() { return new Time((now().totalMinutesSince0 + 1) * MILLIS_PER_MINUTE - 1); }
-    
-    int minute() { return (int) totalMinutesSince0 % 60; }
+    private final long totalMinutesSince0() { return t / MILLIS_PER_MINUTE; };
+    private final long totalHoursSince0()   { return t / MILLIS_PER_HOUR; };
+
+    static Time endOfLastMinute() { return new Time(now().totalMinutesSince0() * MILLIS_PER_MINUTE - 1); }
+    static Time endOfThisMinute() { return new Time((now().totalMinutesSince0() + 1) * MILLIS_PER_MINUTE - 1); }
+
+    int minute() { return (int) totalMinutesSince0() % 60; }
+    int hour()   { return (int) totalHoursSince0() % 24; }
     int day()    { return (int) (timeThisYear / MILLIS_PER_DAY); }
     int year()   { return index + 1970; }
 
@@ -59,5 +67,9 @@ final class Time {
 
     boolean inThePast()   { return t < System.currentTimeMillis(); }
     boolean inTheFuture() { return t > System.currentTimeMillis(); }
+
+    @Override public String toString() {
+        return t + "(" + year() + "/" + day() + "/" + "hour" + ":" + minute() + ":" + "second" + ")";
+    }
 
 }

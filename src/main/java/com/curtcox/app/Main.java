@@ -1,18 +1,17 @@
 package com.curtcox.app;
 
 import java.awt.*;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 final class Main {
 
     static final SimpleImageRetriever retriever = new SimpleImageRetriever();
-    static final Executor              executor = Executors.newSingleThreadExecutor();
+    static final ExecutorService       executor = Executors.newSingleThreadExecutor();
     static final SimpleImageRequestor requestor = new SimpleImageRequestor(retriever,executor);
     static final ScreenLogViewer         viewer = new ScreenLogViewer(requestor,Screen.width(),Screen.height());
 
     static void main0() {
-        requestor.display = viewer;
+        requestor.start(viewer);
         viewer.show();
     }
 

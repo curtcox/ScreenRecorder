@@ -163,4 +163,22 @@ public class TimeTest {
         assertEquals(3,t.minute());
     }
 
+    @Test
+    public void time_0_can_be_constructed_via_year_day_minute() {
+        Time t = new Time(1970,0,0,0);
+        assertEquals(1970,t.year());
+        assertEquals(0,t.day());
+        assertEquals(0,t.hour());
+        assertEquals(0,t.minute());
+    }
+
+    @Test
+    public void dec_31_1999_can_be_constructed_via_year_day_minute() {
+        Time t = new Time(1999,364,23,59);
+        assertEquals(1999,t.year());
+        assertEquals(364,t.day());
+        assertEquals(23,t.hour());
+        assertEquals(59,t.minute());
+    }
+
 }
