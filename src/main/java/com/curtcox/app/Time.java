@@ -42,8 +42,14 @@ final class Time {
     }
 
     Time(int year, int day, int hour, int minute) {
+        this(year,day,hour,minute,0,0);
+    }
+
+    Time(int year, int day, int hour, int minute, int second, int milliseconds) {
         index = year - 1970;
-        timeThisYear = day * MILLIS_PER_DAY + hour * MILLIS_PER_HOUR + minute * MILLIS_PER_MINUTE;
+        timeThisYear = day * MILLIS_PER_DAY + hour * MILLIS_PER_HOUR + minute * MILLIS_PER_MINUTE +
+            second * MILLIS_PER_SECOND + milliseconds;
+
         t = startOfYear[index] + timeThisYear;
     }
 

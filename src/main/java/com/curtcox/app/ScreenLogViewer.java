@@ -11,31 +11,40 @@ import java.awt.image.BufferedImage;
 // EDT only
 final class ScreenLogViewer implements Viewer.Display {
 
-    int lastTimePartChanged = 0;
+    private TimePartSlider lastTimePartChanged;
     final JFrame      frame = new JFrame("Viewer");
-    final JSlider     years = slider(0);
-    final JSlider      days = slider(1);
-    final JSlider     hours = slider(2);
-    final JSlider   minutes = slider(3);
-    final JSlider   seconds = slider(4);
+    final TimePartSlider     years = slider(0);
+    final TimePartSlider      days = slider(1);
+    final TimePartSlider     hours = slider(2);
+    final TimePartSlider   minutes = slider(3);
+    final TimePartSlider   seconds = slider(4);
     final JTextField search = new JTextField();
     final JLabel imageLabel = new JLabel();
-    final JLabel  timeLabel = new JLabel();
+    final JLabel  timeLabel = newTimeLabel();
     final Listener listener = new Listener();
     final Viewer.Requestor requestor;
     final TimeCalculator calculator = new TimeCalculator();
+    private static final int MAX = 10000;
 
     // On change, update the request
     private class Listener implements ChangeListener, DocumentListener {
         @Override public void stateChanged(ChangeEvent e)    {
-            TimePartSlider slider = (TimePartSlider) e.getSource();
-            slider.setToolTipText(Time.now().toString());
-            lastTimePartChanged = slider.index;
-            updateRequest();
+            if (lastTimePartChanged==null) {
+                userInitiated(e);
+            }
         }
-        @Override public void insertUpdate(DocumentEvent e)  { updateRequest(); }
-        @Override public void removeUpdate(DocumentEvent e)  { updateRequest(); }
-        @Override public void changedUpdate(DocumentEvent e) { updateRequest(); }
+        void userInitiated(ChangeEvent e)    {
+            try {
+                lastTimePartChanged = (TimePartSlider) e.getSource();
+                updateRequest(!lastTimePartChanged.getValueIsAdjusting());
+            } finally {
+                lastTimePartChanged = null;
+            }
+        }
+        @Override public void insertUpdate(DocumentEvent e)  { fullUpdate(); }
+        @Override public void removeUpdate(DocumentEvent e)  { fullUpdate(); }
+        @Override public void changedUpdate(DocumentEvent e) { fullUpdate(); }
+        void fullUpdate() { updateRequest(true); }
     }
 
     ScreenLogViewer(Viewer.Requestor requestor, int width, int height) {
@@ -52,8 +61,15 @@ final class ScreenLogViewer implements Viewer.Display {
         TimePartSlider(int index) {
             this.index = index;
             setMinimum(0);
-            setMaximum(10000);
+            setMaximum(MAX);
         }
+    }
+
+    private static JLabel newTimeLabel() {
+        JLabel label = new JLabel("----/--- --:--:--");
+        label.setPreferredSize(new Dimension(130,20));
+        label.setFont(new Font( "Monospaced", Font.PLAIN, 12 ));
+        return label;
     }
 
     void setSize(int width,int height) {
@@ -83,8 +99,6 @@ final class ScreenLogViewer implements Viewer.Display {
         bottom.add(timeLabel,BorderLayout.WEST);
         bottom.add(bottomSliders,BorderLayout.CENTER);
         frame.add(bottom,BorderLayout.SOUTH);
-        timeLabel.setPreferredSize(new Dimension(130,20));
-        timeLabel.setFont(new Font( "Monospaced", Font.PLAIN, 12 ));
     }
 
     void addListeners() {
@@ -100,23 +114,36 @@ final class ScreenLogViewer implements Viewer.Display {
         imageLabel.setIcon(new ImageIcon(image.getScaledInstance(image.getWidth(),image.getHeight(),16)));
     }
 
-    void updateRequest() {
+    void updateRequest(boolean full) {
         Time time = fromSliders();
-        updateTimeLabel(time);
-        requestor.request(new Viewer.Request(search.getText(),time));
+        updateTime(time);
+        if (full) {
+            requestor.request(new Viewer.Request(search.getText(),time));
+        }
     }
 
     private Time fromSliders() {
         double[] parts = new double[] {value(years),value(days),value(hours),value(minutes),value(seconds)};
-        return calculator.timeFrom(parts,lastTimePartChanged);
+        return calculator.timeFrom(parts,lastTimePartChanged.index);
     }
 
-    private void updateTimeLabel(Time time) {
+    private void updateTime(Time time) {
         timeLabel.setText(" " + time.toString());
+        set(years,calculator.year(time));
+        set(days,calculator.day(time));
+        set(hours,calculator.hour(time));
+        set(minutes,calculator.minute(time));
+        set(seconds,calculator.second(time));
     }
 
     private static double value(JSlider slider) {
-        return ((double) slider.getValue()) / ((double) slider.getMaximum());
+        return ((double) slider.getValue()) / ((double) MAX);
+    }
+
+    private void set(TimePartSlider slider,double value) {
+        if (slider!=lastTimePartChanged) {
+            slider.setValue((int) (MAX * value));
+        }
     }
 
     void show() {
