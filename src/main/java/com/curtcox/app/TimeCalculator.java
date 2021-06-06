@@ -13,11 +13,11 @@ final class TimeCalculator {
     }
 
     TimeCalculator() {
-        this(Time.now(),Time.now());
+        this(new Time(2000,0,0,0),new Time(2040,0,0,0));
     }
 
-    Time timeFrom(double years, double days, double hours, double minutes, double seconds) {
-        long t = 0;
+    Time timeFrom(double[] parts,int focus) {
+        long t = (long) (start.t + (parts[0] * duration));
         return new Time(t);
     }
 }

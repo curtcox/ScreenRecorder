@@ -4,6 +4,11 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.concurrent.*;
 
+/**
+ * This acts as a bridge between a display and a retriever.
+ * It primarily translates method calls into queue operations so that the EDT is never blocked.
+ * It also discards requests that have been superseded by newer ones.
+ */
 final class SimpleImageRequestor implements Viewer.Requestor {
 
     private Viewer.Display display;
@@ -22,7 +27,7 @@ final class SimpleImageRequestor implements Viewer.Requestor {
             @Override
             public void run() {
                 while (!executor.isShutdown()) {
-                    Viewer.Request request = latestRequest();
+                    Viewer.Request request = latestRequestOrNull();
                     if (request==null) {
                         Sleep.millis(100);
                     } else {
@@ -33,7 +38,7 @@ final class SimpleImageRequestor implements Viewer.Requestor {
         });
     }
 
-    private Viewer.Request latestRequest() {
+    private Viewer.Request latestRequestOrNull() {
         synchronized (requests) {
             if (requests.isEmpty()) {
                 return null;

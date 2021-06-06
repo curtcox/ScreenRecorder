@@ -9,13 +9,9 @@ final class FileTimeMap {
     File file(Time time) {
         return new File(base.getPath() +
                 "/" + time.year() +
-                "/" + last(3,time.day() + 1) +
-                "/" + last(4,time.minute() + 1) + ".slog");
+                "/" + Pad.last(3,time.day() + 1) +
+                "/" + Pad.last(4,time.minute() + 1) + ".slog");
     }
 
-    private static String last(int count,int number) {
-        String text = "0000" + number;
-        return text.substring(text.length() - count);
-    }
 
 }

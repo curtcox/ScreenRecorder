@@ -7,7 +7,8 @@ final class Time {
     private final long timeThisYear;
     private final int index;
 
-    private static long MILLIS_PER_MINUTE     = 60 * 1000;
+    private static long MILLIS_PER_SECOND     = 1000;
+    private static long MILLIS_PER_MINUTE     = MILLIS_PER_SECOND * 60;
     private static long MILLIS_PER_HOUR       = MILLIS_PER_MINUTE * 60;
     private static long MILLIS_PER_DAY        = MILLIS_PER_HOUR   * 24;
     private static long MILLIS_PER_YEAR       = MILLIS_PER_DAY    * 365;
@@ -52,12 +53,14 @@ final class Time {
         timeThisYear = t - startOfYear[index];
     }
 
+    private final long totalSecondsSince0() { return t / MILLIS_PER_SECOND; };
     private final long totalMinutesSince0() { return t / MILLIS_PER_MINUTE; };
     private final long totalHoursSince0()   { return t / MILLIS_PER_HOUR; };
 
     static Time endOfLastMinute() { return new Time(now().totalMinutesSince0() * MILLIS_PER_MINUTE - 1); }
     static Time endOfThisMinute() { return new Time((now().totalMinutesSince0() + 1) * MILLIS_PER_MINUTE - 1); }
 
+    int second() { return (int) totalSecondsSince0() % 60; }
     int minute() { return (int) totalMinutesSince0() % 60; }
     int hour()   { return (int) totalHoursSince0() % 24; }
     int day()    { return (int) (timeThisYear / MILLIS_PER_DAY); }
@@ -69,7 +72,10 @@ final class Time {
     boolean inTheFuture() { return t > System.currentTimeMillis(); }
 
     @Override public String toString() {
-        return t + "(" + year() + "/" + day() + "/" + "hour" + ":" + minute() + ":" + "second" + ")";
+        return year() + "/" + pad3(day()) + " " + pad(hour()) + ":" + pad(minute()) + ":" + pad(second());
     }
+
+    private static String pad(int count)  { return Pad.last(2,count); }
+    private static String pad3(int count) { return Pad.last(3,count); }
 
 }
