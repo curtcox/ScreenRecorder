@@ -1,5 +1,7 @@
-package com.neomemex.viewer;
+package com.neomemex.shared;
 
+import com.neomemex.shared.Time;
+import com.neomemex.shared.TimeCalculator;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

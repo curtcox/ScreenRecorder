@@ -1,5 +1,6 @@
-package com.neomemex.viewer;
+package com.neomemex.shared;
 
+import com.neomemex.shared.Image;
 import org.junit.Test;
 
 import java.util.ArrayList;

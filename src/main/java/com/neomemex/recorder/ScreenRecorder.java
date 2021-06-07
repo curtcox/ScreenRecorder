@@ -1,4 +1,7 @@
-package com.neomemex.viewer;
+package com.neomemex.recorder;
+
+import com.neomemex.shared.FileTimeMap;
+import com.neomemex.shared.Time;
 
 import java.io.File;
 import java.io.IOException;

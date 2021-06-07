@@ -1,4 +1,8 @@
-package com.neomemex.viewer;
+package com.neomemex.recorder;
+
+import com.neomemex.shared.Screen;
+import com.neomemex.shared.Sleep;
+import com.neomemex.shared.Time;
 
 import java.io.IOException;
 

@@ -1,5 +1,8 @@
 package com.neomemex.viewer;
 
+import com.neomemex.shared.Image;
+import com.neomemex.shared.Time;
+
 import java.awt.image.BufferedImage;
 
 // This interface is a namespace for 3 intertwined interfaces.

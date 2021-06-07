@@ -1,5 +1,8 @@
 package com.neomemex.viewer;
 
+import com.neomemex.recorder.RasterSerializer;
+import com.neomemex.shared.Screen;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;

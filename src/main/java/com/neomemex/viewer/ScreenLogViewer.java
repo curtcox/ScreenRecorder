@@ -1,5 +1,8 @@
 package com.neomemex.viewer;
 
+import com.neomemex.shared.Time;
+import com.neomemex.shared.TimeCalculator;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;

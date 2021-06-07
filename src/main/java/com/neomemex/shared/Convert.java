@@ -1,4 +1,4 @@
-package com.neomemex.viewer;
+package com.neomemex.shared;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;

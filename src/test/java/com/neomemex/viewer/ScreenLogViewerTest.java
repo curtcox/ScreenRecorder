@@ -1,5 +1,7 @@
 package com.neomemex.viewer;
 
+import com.neomemex.shared.Screen;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 

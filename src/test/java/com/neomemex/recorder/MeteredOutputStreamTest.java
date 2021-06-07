@@ -1,5 +1,6 @@
-package com.neomemex.viewer;
+package com.neomemex.recorder;
 
+import com.neomemex.recorder.MeteredOutputStream;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;

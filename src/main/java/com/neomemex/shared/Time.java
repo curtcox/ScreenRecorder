@@ -1,7 +1,7 @@
-package com.neomemex.viewer;
+package com.neomemex.shared;
 
 // Immutable instant
-final class Time {
+public final class Time {
 
     final long t;
     private final long timeThisYear;
@@ -63,8 +63,8 @@ final class Time {
     private final long totalMinutesSince0() { return t / MILLIS_PER_MINUTE; };
     private final long totalHoursSince0()   { return t / MILLIS_PER_HOUR; };
 
-    static Time endOfLastMinute() { return new Time(now().totalMinutesSince0() * MILLIS_PER_MINUTE - 1); }
-    static Time endOfThisMinute() { return new Time((now().totalMinutesSince0() + 1) * MILLIS_PER_MINUTE - 1); }
+    public static Time endOfLastMinute() { return new Time(now().totalMinutesSince0() * MILLIS_PER_MINUTE - 1); }
+    public static Time endOfThisMinute() { return new Time((now().totalMinutesSince0() + 1) * MILLIS_PER_MINUTE - 1); }
 
     int second() { return (int) totalSecondsSince0() % 60; }
     int minute() { return (int) totalMinutesSince0() % 60; }
@@ -72,10 +72,10 @@ final class Time {
     int day()    { return (int) (timeThisYear / MILLIS_PER_DAY); }
     int year()   { return index + 1970; }
 
-    static Time now() { return new Time(System.currentTimeMillis()); }
+    public static Time now() { return new Time(System.currentTimeMillis()); }
 
-    boolean inThePast()   { return t < System.currentTimeMillis(); }
-    boolean inTheFuture() { return t > System.currentTimeMillis(); }
+    public boolean inThePast()   { return t < System.currentTimeMillis(); }
+    public boolean inTheFuture() { return t > System.currentTimeMillis(); }
 
     @Override public String toString() {
         return year() + "/" + pad3(day()) + " " + pad(hour()) + ":" + pad(minute()) + ":" + pad(second());

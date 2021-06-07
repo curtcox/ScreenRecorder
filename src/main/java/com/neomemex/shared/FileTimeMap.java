@@ -1,12 +1,12 @@
-package com.neomemex.viewer;
+package com.neomemex.shared;
 
 import java.io.File;
 
-final class FileTimeMap {
+public final class FileTimeMap {
 
-    File base = new File(".screenshots");
+    final File base = new File(".screenshots");
 
-    File file(Time time) {
+    public File file(Time time) {
         return new File(base.getPath() +
                 "/" + time.year() +
                 "/" + Pad.last(3,time.day() + 1) +

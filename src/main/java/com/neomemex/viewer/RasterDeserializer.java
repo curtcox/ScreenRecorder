@@ -1,5 +1,7 @@
 package com.neomemex.viewer;
 
+import com.neomemex.shared.Image;
+
 import java.awt.image.*;
 
 /**
@@ -18,7 +20,7 @@ final class RasterDeserializer {
         return new int[] { colorModel.getRedMask(), colorModel.getGreenMask(), colorModel.getBlueMask() };
     }
 
-    private static WritableRaster raster(DirectColorModel colorModel,Image image) {
+    private static WritableRaster raster(DirectColorModel colorModel, Image image) {
         return raster(colorModel,image.pixels(), image.width, image.height);
     }
 

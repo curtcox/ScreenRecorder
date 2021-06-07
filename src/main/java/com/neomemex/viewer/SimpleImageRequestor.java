@@ -1,5 +1,7 @@
 package com.neomemex.viewer;
 
+import com.neomemex.shared.Sleep;
+
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.concurrent.*;

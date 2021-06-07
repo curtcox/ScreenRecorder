@@ -1,9 +1,9 @@
-package com.neomemex.viewer;
+package com.neomemex.shared;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-final class Screen {
+public final class Screen {
 
     static final Robot robot = newRobot();
 
@@ -15,7 +15,7 @@ final class Screen {
         }
     }
 
-    static BufferedImage shot() {
+    public static BufferedImage shot() {
         return robot.createScreenCapture(new Rectangle(size()));
     }
 
@@ -23,6 +23,6 @@ final class Screen {
         return Toolkit.getDefaultToolkit().getScreenSize();
     }
 
-    static int width() {  return size().width; }
-    static int height() { return size().height; }
+    public static int width() {  return size().width; }
+    public static int height() { return size().height; }
 }

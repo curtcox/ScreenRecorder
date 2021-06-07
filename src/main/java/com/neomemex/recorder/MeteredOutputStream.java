@@ -1,4 +1,4 @@
-package com.neomemex.viewer;
+package com.neomemex.recorder;
 
 import java.io.IOException;
 import java.io.OutputStream;

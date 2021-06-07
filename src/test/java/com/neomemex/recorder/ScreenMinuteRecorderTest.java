@@ -1,4 +1,7 @@
-package com.neomemex.viewer;
+package com.neomemex.recorder;
+
+import com.neomemex.recorder.*;
+import com.neomemex.shared.Time;
 
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
@@ -12,7 +15,7 @@ public class ScreenMinuteRecorderTest {
                             new Deflater(Deflater.BEST_COMPRESSION), 5120
                     ));
 
-        new ScreenMinuteRecorder(writer,Time.endOfThisMinute(),500)
+        new ScreenMinuteRecorder(writer, Time.endOfThisMinute(),500)
                 .writeScreenshots();
     }
 

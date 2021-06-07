@@ -1,8 +1,8 @@
-package com.neomemex.viewer;
+package com.neomemex.shared;
 
-final class Sleep {
+public final class Sleep {
 
-    static void second() {
+    public static void second() {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -10,7 +10,7 @@ final class Sleep {
         }
     }
 
-    static void millis(int m) {
+    public static void millis(int m) {
         try {
             Thread.sleep(m);
         } catch (InterruptedException e) {

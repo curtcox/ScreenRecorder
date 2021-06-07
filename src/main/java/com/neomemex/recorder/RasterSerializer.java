@@ -1,17 +1,19 @@
-package com.neomemex.viewer;
+package com.neomemex.recorder;
 
-import java.awt.*;
+import com.neomemex.shared.Image;
+
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.nio.ByteBuffer;
 
-final class RasterSerializer {
+public final class RasterSerializer {
 
     private final Dimension dim;
     private final int numBands = Consts.bands;
     private final int[] dataElements;
 
-    RasterSerializer(BufferedImage image) {
+    public RasterSerializer(BufferedImage image) {
         final WritableRaster raster = image.getRaster();
         if (raster.getNumBands() != numBands) {
             throw new IllegalArgumentException("Sorry, Dave.");
@@ -25,7 +27,7 @@ final class RasterSerializer {
     }
     
     ByteBuffer asByteBuffer() { return allButLast(threeOf4(byteBuffer(3))); }
-    Image             image() { return new Image(dataElements,dim.width, dim.height); }
+    public Image image() { return new com.neomemex.shared.Image(dataElements,dim.width, dim.height); }
 
     private static int[] dataElements(WritableRaster raster,Dimension dim) {
         return (int[]) raster.getDataElements(0, 0, dim.width, dim.height, null);

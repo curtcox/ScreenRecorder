@@ -1,8 +1,8 @@
-package com.neomemex.viewer;
+package com.neomemex.shared;
 
 import java.util.*;
 
-final class Image {
+public final class Image {
 
     enum Color {
         ARGB, RGB
@@ -14,15 +14,15 @@ final class Image {
 
     private final int[] pixels;
 
-    final int width;
+    public final int width;
 
-    final int height;
+    public final int height;
 
-    final Color color;
+    public final Color color;
 
-    final Type type;
+    public final Type type;
 
-    Image(int[] pixels, int width, int height) {
+    public Image(int[] pixels, int width, int height) {
         this(Color.ARGB,Type.full,pixels,width,height);
     }
 
@@ -34,10 +34,10 @@ final class Image {
         this.type = type;
     }
 
-    int[] pixels() { return Arrays.copyOf(pixels,pixels.length); }
-    byte[] bytes() { return Convert.toBytes(pixels); }
-    Image rgb()    { return new Image(Color.RGB,type,rgb(bytes()),width,height); }
-    Image xor(Image that)   { return new Image(color,Type.delta,xor(pixels,that.pixels),width,height); }
+    public int[] pixels() { return Arrays.copyOf(pixels,pixels.length); }
+    public byte[] bytes() { return Convert.toBytes(pixels); }
+    public Image rgb()    { return new Image(Color.RGB,type,rgb(bytes()),width,height); }
+    public Image xor(Image that)   { return new Image(color,Type.delta,xor(pixels,that.pixels),width,height); }
 
     private static int[] rgb(byte[] in) {
         int offset = 0;
@@ -51,7 +51,7 @@ final class Image {
         return Convert.toInts(out);
     }
 
-    Image trim() {
+    public Image trim() {
         int firstNonZero = 0;
         int[] in = pixels;
         for (int i=firstNonZero; i<in.length; i++) {

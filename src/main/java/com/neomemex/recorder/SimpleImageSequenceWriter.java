@@ -1,4 +1,6 @@
-package com.neomemex.viewer;
+package com.neomemex.recorder;
+
+import com.neomemex.shared.Image;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
