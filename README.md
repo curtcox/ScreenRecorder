@@ -26,11 +26,12 @@ mechanisms for interoperation so that other tools can also be used to perform th
 - Suggest - use the currently captured screen and archived information to suggest actions
 - Share - actively send others bits of your archive or let them access part of your archive for searches and suggestions
 
-The intent is to provide an open solution that things like 
-- [PiKVM](https://pikvm.org/),[TinyPilot](https://tinypilotkvm.com/)
+The intent is to provide an open solution that can interoperate with things like 
+- [PiKVM](https://pikvm.org/) [TinyPilot](https://tinypilotkvm.com/)
 - Cloud storage
 - Lucene, Elasticsearch
 - Alfred, [searchcode](https://github.com/boyter/searchcode-server)
+- [Tesseract](https://github.com/tesseract-ocr/tesseract/blob/master/doc/tesseract.1.asc) [VNRecognizeTextRequest](https://developer.apple.com/documentation/vision/recognizing_text_in_images)
 - others
 
 This code is ultimately a fork of the PNG writer, although you won't see much evidence of that at this point.
