@@ -14,18 +14,14 @@ public class TrayTest {
 
         @Override
         public void stop() {
-
+            System.out.println("Stopped Recording");
         }
     }
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    new Tray(new FakeRecorder()).install();
-                } catch (AWTException e) {
-                    throw new RuntimeException(e);
-                }
+                Tray.install(new FakeRecorder());
             }
         });
     }

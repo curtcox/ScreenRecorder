@@ -18,8 +18,12 @@ public class Tray {
     final MenuItem   exit = new MenuItem("Exit");
     final SystemTray tray = SystemTray.getSystemTray();
 
-    public Tray(Recorder recorder) {
+    Tray(Recorder recorder) {
         this.recorder = recorder;
+    }
+
+    static void install(Recorder recorder) {
+        new Tray(recorder).install();
     }
 
     static BufferedImage circleImage(Color color) {
@@ -32,23 +36,52 @@ public class Tray {
         return image;
     }
 
-    void install() throws AWTException {
+    void install() {
         addMenuItems();
         blackCircle.setPopupMenu(popup);
-        tray.add(blackCircle);
+        add(blackCircle);
         addListeners();
+    }
+
+    void add(TrayIcon icon) {
+        try {
+            tray.add(icon);
+        } catch (AWTException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     void addListeners() {
         addBlackCircleListener();
+        addRedCircleListener();
         addAboutListener();
         addExitListener();
+    }
+
+    private void switchToRedButton() {
+        tray.remove(blackCircle);
+        add(redCircle);
+    }
+
+    private void switchToBlackButton() {
+        tray.remove(redCircle);
+        add(blackCircle);
     }
 
     void addBlackCircleListener() {
         blackCircle.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                switchToRedButton();
                 recorder.start();
+            }
+        });
+    }
+
+    void addRedCircleListener() {
+        redCircle.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                switchToBlackButton();
+                recorder.stop();
             }
         });
     }
@@ -71,7 +104,7 @@ public class Tray {
         });
     }
 
-    void addMenuItems() throws AWTException {
+    void addMenuItems() {
         popup.add(about);
         popup.addSeparator();
         popup.addSeparator();

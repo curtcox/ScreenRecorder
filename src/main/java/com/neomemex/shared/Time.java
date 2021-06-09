@@ -3,7 +3,7 @@ package com.neomemex.shared;
 // Immutable instant
 public final class Time {
 
-    final long t;
+    public final long t;
     private final long timeThisYear;
     private final int index;
 
@@ -72,10 +72,11 @@ public final class Time {
     int day()    { return (int) (timeThisYear / MILLIS_PER_DAY); }
     int year()   { return index + 1970; }
 
-    public static Time now() { return new Time(System.currentTimeMillis()); }
+    public static Time now() { return new Time(t()); }
 
-    public boolean inThePast()   { return t < System.currentTimeMillis(); }
-    public boolean inTheFuture() { return t > System.currentTimeMillis(); }
+    public boolean inThePast()   { return t < t(); }
+    public boolean inTheFuture() { return t > t(); }
+    private static long t() { return  System.currentTimeMillis(); }
 
     @Override public String toString() {
         return year() + "/" + pad3(day()) + " " + pad(hour()) + ":" + pad(minute()) + ":" + pad(second());
