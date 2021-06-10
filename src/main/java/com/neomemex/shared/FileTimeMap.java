@@ -9,8 +9,9 @@ public final class FileTimeMap {
     public File file(Time time) {
         return new File(base.getPath() +
                 "/" + time.year() +
-                "/" + Pad.last(3,time.day() + 1) +
-                "/" + Pad.last(4,time.minute() + 1) + ".slog");
+                "/" + Pad.last(3,time.day()) +
+                "/" + Pad.last(2,time.hour()) +
+                "/" + Pad.last(2,time.minute()) + ".slog");
     }
 
 
