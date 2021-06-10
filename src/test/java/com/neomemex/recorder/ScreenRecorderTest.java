@@ -1,15 +1,14 @@
 package com.neomemex.recorder;
 
-import com.neomemex.recorder.ScreenRecorder;
-import com.neomemex.shared.FileTimeMap;
-import com.neomemex.shared.Time;
+import com.neomemex.shared.Sleep;
 
 public class ScreenRecorderTest {
 
-    public static void main(String[] args) throws Exception {
-        FileTimeMap map = new FileTimeMap();
-        new ScreenRecorder(map, Time.endOfThisMinute(),500)
-                .record();
+    public static void main(String[] args) {
+        Recorder recorder = ScreenRecorder.startWaitingToRecord();
+        recorder.start();
+        Sleep.second(60);
+        recorder.stop();
     }
 
 }

@@ -2,9 +2,9 @@ package com.neomemex.shared;
 
 public final class Sleep {
 
-    public static void second() {
+    public static void second(int count) {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(count * 1000);
         } catch (InterruptedException e) {
             print("???");
         }

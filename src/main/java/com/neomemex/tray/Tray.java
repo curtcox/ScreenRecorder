@@ -1,6 +1,7 @@
 package com.neomemex.tray;
 
 import com.neomemex.recorder.Recorder;
+import com.neomemex.viewer.Viewer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,22 +9,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
-public class Tray {
+public final class Tray {
 
     final Recorder recorder;
+    final Viewer.Display display;
     final PopupMenu popup = new PopupMenu();
     final TrayIcon blackCircle = new TrayIcon(circleImage(Color.BLACK));
     final TrayIcon   redCircle = new TrayIcon(circleImage(Color.RED));
     final MenuItem  about = new MenuItem("About");
+    final MenuItem viewer = new MenuItem("Viewer");
     final MenuItem   exit = new MenuItem("Exit");
     final SystemTray tray = SystemTray.getSystemTray();
 
-    Tray(Recorder recorder) {
+    Tray(Recorder recorder, Viewer.Display display) {
         this.recorder = recorder;
+        this.display = display;
     }
 
-    static void install(Recorder recorder) {
-        new Tray(recorder).install();
+    public static void install(Recorder recorder, Viewer.Display display) {
+        new Tray(recorder,display).install();
     }
 
     static BufferedImage circleImage(Color color) {
@@ -55,6 +59,7 @@ public class Tray {
         addBlackCircleListener();
         addRedCircleListener();
         addAboutListener();
+        addViewerListener();
         addExitListener();
     }
 
@@ -95,6 +100,14 @@ public class Tray {
         });
     }
 
+    void addViewerListener() {
+        viewer.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                display.show();
+            }
+        });
+    }
+
     void addExitListener() {
         exit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -107,6 +120,7 @@ public class Tray {
     void addMenuItems() {
         popup.add(about);
         popup.addSeparator();
+        popup.add(viewer);
         popup.addSeparator();
         popup.add(exit);
     }

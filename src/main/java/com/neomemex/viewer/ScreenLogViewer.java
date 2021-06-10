@@ -55,7 +55,6 @@ final class ScreenLogViewer implements Viewer.Display {
         layout();
         setSize(width,height);
         addListeners();
-        exitOnClose();
     }
 
     private static TimePartSlider slider(int index) { return new TimePartSlider(index); }
@@ -78,10 +77,6 @@ final class ScreenLogViewer implements Viewer.Display {
     void setSize(int width,int height) {
         frame.setSize(width,height);
         frame.setMinimumSize(new Dimension(width/2,height/2));
-    }
-
-    void exitOnClose() {
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     void layout() {
@@ -149,7 +144,7 @@ final class ScreenLogViewer implements Viewer.Display {
         }
     }
 
-    void show() {
+    public void show() {
         frame.setVisible(true);
     }
 

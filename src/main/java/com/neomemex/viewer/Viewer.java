@@ -6,9 +6,10 @@ import com.neomemex.shared.Time;
 import java.awt.image.BufferedImage;
 
 // This interface is a namespace for 3 intertwined interfaces.
-interface Viewer {
+public interface Viewer {
 
     interface Display {
+        void show();
         void setImage(BufferedImage image); // UI -- Invokers must always be on the EDT.
     }
 
