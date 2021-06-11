@@ -1,9 +1,6 @@
 package com.neomemex.shared;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 public final class TimeStreamMap {
 
@@ -12,6 +9,14 @@ public final class TimeStreamMap {
     public OutputStream output(Time time) {
         try {
             return new FileOutputStream(ensure(map.file(time)));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public InputStream input(Time time) {
+        try {
+            return new FileInputStream(ensure(map.file(time)));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

@@ -20,11 +20,15 @@ final class ImageCopier {
     static void main0() {
         BufferedImage original = Screen.shot();
         show("original",original);
-
-        RasterSerializer serializer = new RasterSerializer(original);
-        BufferedImage copy = RasterDeserializer.image(serializer.image());
+        BufferedImage copy = copy(original);
         show("copy", copy);
     }
+
+    static BufferedImage copy(BufferedImage original) {
+        RasterSerializer serializer = new RasterSerializer(original);
+        return RasterDeserializer.image(serializer.image());
+    }
+
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {

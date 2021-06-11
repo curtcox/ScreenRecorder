@@ -1,12 +1,22 @@
 package com.neomemex.viewer;
 
-import com.neomemex.recorder.RasterSerializer;
-import com.neomemex.shared.Screen;
+import com.neomemex.reader.ImageSequenceReader;
+import com.neomemex.shared.Image;
+import com.neomemex.shared.Time;
+import com.neomemex.shared.TimeStreamMap;
+
 
 final class SimpleImageRetriever implements Viewer.Retriever {
+
+    final TimeStreamMap map = new TimeStreamMap();
+
     @Override
     public Viewer.Response request(Viewer.Request request) {
-        System.out.println(request);
-        return new Viewer.Response(new RasterSerializer(Screen.shot()).image());
+        return new Viewer.Response(image(request.time));
+    }
+
+    private Image image(Time time) {
+        ImageSequenceReader reader = new ImageSequenceReader(map.input(time));
+        return null;
     }
 }
