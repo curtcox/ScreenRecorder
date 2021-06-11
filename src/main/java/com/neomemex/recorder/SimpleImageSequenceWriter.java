@@ -19,12 +19,9 @@ final class SimpleImageSequenceWriter implements ImageSequenceWriter {
         this.out = out;
     }
 
-    static ImageSequenceWriter to(File fileName) throws IOException {
+    static ImageSequenceWriter to(OutputStream out) {
         return new SimpleImageSequenceWriter(
-                new DeflaterOutputStream(
-                        new FileOutputStream(fileName),
-                        new Deflater(Deflater.BEST_COMPRESSION), 5120
-                ));
+                new DeflaterOutputStream(out, new Deflater(Deflater.BEST_COMPRESSION), 5120));
     }
 
 

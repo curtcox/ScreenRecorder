@@ -9,6 +9,7 @@ public class ScreenRecorderTest {
         recorder.start();
         Sleep.second(60);
         recorder.stop();
+        System.exit(0);
     }
 
 }
