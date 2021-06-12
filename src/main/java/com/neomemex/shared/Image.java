@@ -13,13 +13,9 @@ public final class Image {
     }
 
     private final int[] pixels;
-
     public final int width;
-
     public final int height;
-
     public final Color color;
-
     public final Type type;
 
     public Image(int[] pixels, int width, int height) {
@@ -85,7 +81,11 @@ public final class Image {
 
     @Override
     public int hashCode() {
-        return pixels.length + (width << 10) + (height << 20);
+        return typeNumber() + (pixels.length << 2)+ (width << 12) + (height << 22);
+    }
+
+    private int typeNumber() {
+        return (color == Color.ARGB ? 0 : 1) + (type==Type.full ? 0 : 2);
     }
 
     @Override

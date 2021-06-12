@@ -52,6 +52,7 @@ public class ImageTest {
         equal(new Image(new int[1],0,0),new Image(new int[1],0,0));
         equal(new Image(new int[1],2,0),new Image(new int[1],2,0));
         equal(new Image(new int[1],2,3),new Image(new int[1],2,3));
+        equal(new Image(new int[0],0,0),new Image(Image.Color.ARGB, Image.Type.full,new int[0],0,0));
     }
 
     @Test
@@ -59,6 +60,8 @@ public class ImageTest {
         unequal(new Image(new int[0],0,0),new Image(new int[1],0,0));
         unequal(new Image(new int[0],0,0),new Image(new int[0],1,0));
         unequal(new Image(new int[0],0,0),new Image(new int[0],0,1));
+        unequal(new Image(new int[0],0,0),new Image(Image.Color.RGB, Image.Type.full,new int[0],0,0));
+        unequal(new Image(new int[0],0,0),new Image(Image.Color.ARGB, Image.Type.delta,new int[0],0,0));
     }
 
     void equal(Image a, Image b) {
