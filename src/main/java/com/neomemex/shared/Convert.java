@@ -3,16 +3,16 @@ package com.neomemex.shared;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-final class Convert {
+public final class Convert {
 
-    static byte[] toBytes(int[] data) {
+    public static byte[] toBytes(int[] data) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(data.length * 4);
         IntBuffer intBuffer = byteBuffer.asIntBuffer();
         intBuffer.put(data);
         return byteBuffer.array();
     }
 
-    static int[] toInts(byte[] data) {
+    public static int[] toInts(byte[] data) {
         IntBuffer intBuf = ByteBuffer.wrap(data)
                         .asIntBuffer();
         int[] array = new int[intBuf.remaining()];

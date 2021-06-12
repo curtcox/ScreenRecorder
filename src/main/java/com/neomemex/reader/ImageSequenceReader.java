@@ -1,15 +1,50 @@
 package com.neomemex.reader;
 
+import com.neomemex.shared.Convert;
 import com.neomemex.shared.Image;
 
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.zip.InflaterInputStream;
 
 public final class ImageSequenceReader {
-    public ImageSequenceReader(InputStream input) {
 
+    final DataInputStream data;
+
+    public ImageSequenceReader(InputStream input) {
+        data = new DataInputStream(input);
+    }
+
+    public static ImageSequenceReader from(InputStream input) {
+        return new ImageSequenceReader(new InflaterInputStream(input));
     }
 
     Image read() {
-        return null;
+        try {
+            return read0();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    private Image read0() throws IOException {
+        Image.Type type = readType();
+        int   size = data.readInt();
+        int  width = data.readShort();
+        int height = data.readShort();
+        byte[] bytes = new byte[size * 4];
+        data.readFully(bytes);
+        Image rgb = new Image(Image.Color.RGB,type,Convert.toInts(bytes),width,height);
+        return rgb.argb();
+    }
+
+    private Image.Type readType() throws IOException {
+        int   kind = data.readByte();
+        if (kind!=0 && kind!=1) {
+            throw new IllegalArgumentException();
+        }
+        return kind == 0 ? Image.Type.full : Image.Type.delta;
+    }
+
 }

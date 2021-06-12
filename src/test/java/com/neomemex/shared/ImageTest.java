@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 public class ImageTest {
 
     @Test
-    public void default_constructor_is_RGB() {
+    public void default_constructor_is_ARGB() {
         Image image = new Image(new int[0],0,0);
         assertEquals(Image.Color.ARGB, image.color);
     }
@@ -49,6 +49,7 @@ public class ImageTest {
     @Test
     public void equal_images() {
         equal(new Image(new int[0],0,0),new Image(new int[0],0,0));
+        equal(new Image(new int[10],10,10),new Image(new int[10],10,10));
         equal(new Image(new int[1],0,0),new Image(new int[1],0,0));
         equal(new Image(new int[1],2,0),new Image(new int[1],2,0));
         equal(new Image(new int[1],2,3),new Image(new int[1],2,3));
@@ -64,15 +65,25 @@ public class ImageTest {
         unequal(new Image(new int[0],0,0),new Image(Image.Color.ARGB, Image.Type.delta,new int[0],0,0));
     }
 
+    @Test
+    public void unequal_images_but_might_have_same_hash_code() {
+        justNotEqual(new Image(new int[]{0},10,10),new Image(new int[]{1},10,10));
+        justNotEqual(new Image(new int[]{1,2,3,4},10,10),new Image(new int[]{1,2,33,4},10,10));
+    }
+
     void equal(Image a, Image b) {
         assertEquals(a,b);
         assertEquals(b,a);
         assertEquals(a.hashCode(),b.hashCode());
     }
 
-    void unequal(Image a, Image b) {
+    void justNotEqual(Image a, Image b) {
         assertNotEquals(a,b);
         assertNotEquals(b,a);
+    }
+
+    void unequal(Image a, Image b) {
+        justNotEqual(a,b);
         assertNotEquals(a.hashCode(),b.hashCode());
     }
 
@@ -82,5 +93,55 @@ public class ImageTest {
             out.add(i);
         }
         return out;
+    }
+
+    @Test
+    public void rgb_is_smaller_than_argb() {
+        Image image = new Image(ints(100),100,100);
+        assertEquals(Image.Color.ARGB,image.color);
+        assertEquals(100,image.size);
+        Image rgb = image.rgb();
+        assertEquals(Image.Color.RGB,rgb.color);
+        assertEquals(75,rgb.size);
+    }
+
+    @Test
+    public void rgb_is_idempotent() {
+        Image image = new Image(ints(100),100,100);
+        Image rgb1 = image.rgb();
+        assertEquals(rgb1,rgb1.rgb());
+        assertSame(rgb1,rgb1.rgb());
+    }
+
+    @Test
+    public void argb_is_idempotent() {
+        Image image = new Image(ints(100),100,100);
+        Image argb1 = image.argb();
+        assertEquals(argb1,argb1.argb());
+        assertSame(argb1,argb1.argb());
+    }
+
+    @Test
+    public void argb_undoes_rgb() {
+        Image image = new Image(ints(100),100,100);
+        Image argb = image.argb();
+        Image rgb = argb.rgb();
+        assertEquals(argb,rgb.argb());
+    }
+
+    @Test
+    public void rgb_undoes_argb() {
+        Image image = new Image(ints(100),100,100);
+        Image rgb = image.rgb();
+        Image argb = rgb.argb();
+        assertEquals(rgb,argb.rgb());
+    }
+
+    static int[] ints(int size) {
+        int[] a = new int[size];
+        for (int i=0; i<size; i++) {
+            a[i] = i;
+        }
+        return a;
     }
 }

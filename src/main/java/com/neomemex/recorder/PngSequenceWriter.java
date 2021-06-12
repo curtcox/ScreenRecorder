@@ -33,9 +33,13 @@ final class PngSequenceWriter
         }
     }
 
-    public void writeImage(BufferedImage img) throws IOException {
-        ensureOpen();
-        writeImage(img, fpsNum, fpsDen);
+    public void writeImage(BufferedImage img) {
+        try {
+            ensureOpen();
+            writeImage(img, fpsNum, fpsDen);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //http://www.w3.org/TR/PNG/#11IHDR

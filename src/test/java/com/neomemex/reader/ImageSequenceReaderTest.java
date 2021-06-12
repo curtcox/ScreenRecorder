@@ -16,17 +16,35 @@ import static org.junit.Assert.assertEquals;
 public class ImageSequenceReaderTest {
 
     @Test
-    public void can_read_image_back_from_file() throws IOException {
+    public void can_read_uncompressed_image_back_from_bytes() throws IOException {
         BufferedImage original = Screen.shot();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         SimpleImageSequenceWriter writer = new SimpleImageSequenceWriter(out);
         Image image = RasterSerializer.serialize(original);
         writer.writeImage(image);
+        writer.close();
 
         ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
         ImageSequenceReader reader = new ImageSequenceReader(in);
         Image copy = reader.read();
 
-        assertEquals(original,copy);
+        assertEquals(image,copy);
     }
+
+    @Test
+    public void can_read_compressed_image_back_from_bytes() throws IOException {
+        BufferedImage original = Screen.shot();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        SimpleImageSequenceWriter writer = SimpleImageSequenceWriter.to(out);
+        Image image = RasterSerializer.serialize(original);
+        writer.writeImage(image);
+        writer.close();
+
+        ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+        ImageSequenceReader reader = ImageSequenceReader.from(in);
+        Image copy = reader.read();
+
+        assertEquals(image,copy);
+    }
+
 }
