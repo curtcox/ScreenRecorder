@@ -2,7 +2,7 @@ package com.neomemex.recorder;
 
 import com.neomemex.shared.Sleep;
 
-public class ScreenRecorderTest {
+public class ScreenRecorderDemo {
 
     public static void main(String[] args) {
         Recorder recorder = ScreenRecorder.startWaitingToRecord();

@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 
-public class ScreenMinuteRecorderTest {
+public class ScreenMinuteRecorderDemo {
 
     public static void main(String[] args) throws Exception {
         ImageSequenceWriter writer = new SimpleImageSequenceWriter(

@@ -13,7 +13,7 @@ public final class RasterSerializer {
     private final int numBands = Consts.bands;
     private final int[] dataElements;
 
-    public RasterSerializer(BufferedImage image) {
+    private RasterSerializer(BufferedImage image) {
         final WritableRaster raster = image.getRaster();
         if (raster.getNumBands() != numBands) {
             throw new IllegalArgumentException("Sorry, Dave.");
@@ -22,12 +22,20 @@ public final class RasterSerializer {
         dataElements = dataElements(raster,dim);
     }
 
+    public static Image serialize(BufferedImage image) {
+        return new RasterSerializer(image).image();
+    }
+
+    public static ByteBuffer asByteBuffer(BufferedImage image) {
+        return new RasterSerializer(image).asByteBuffer();
+    }
+
     private static Dimension dim(BufferedImage image) {
         return new Dimension(image.getWidth(), image.getHeight());
     }
     
     ByteBuffer asByteBuffer() { return allButLast(threeOf4(byteBuffer(3))); }
-    public Image image() { return new com.neomemex.shared.Image(dataElements,dim.width, dim.height); }
+    Image image() { return new Image(dataElements,dim.width, dim.height); }
 
     private static int[] dataElements(WritableRaster raster,Dimension dim) {
         return (int[]) raster.getDataElements(0, 0, dim.width, dim.height, null);
@@ -48,15 +56,6 @@ public final class RasterSerializer {
         for (int i = 0; i < dataElements.length; i++) {
             out.putInt(index, dataElements[i] << 8);
             index += 3;
-        }
-        return out;
-    }
-
-    private ByteBuffer firstOf4(ByteBuffer out) {
-        int index = 0;
-        for (int i = 0; i < dataElements.length; i++) {
-            out.putInt(index, dataElements[i] << 8);
-            index += 1;
         }
         return out;
     }

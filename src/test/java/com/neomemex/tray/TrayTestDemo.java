@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class TrayTest {
+public class TrayTestDemo {
 
     static class FakeRecorder implements Recorder {
         @Override public void start() { System.out.println("Started Recording"); }

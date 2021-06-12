@@ -8,12 +8,12 @@ final class PngImageEncoder {
 
     private final Dimension dim;
     private final Filter filter;
-    private final RasterSerializer raster;
+    private final ByteBuffer pixelBytes;
 
     PngImageEncoder(BufferedImage image, Filter filter) {
         this.dim     = dim(image);
         this.filter  = filter;
-        raster       = new RasterSerializer(image);
+        pixelBytes   = RasterSerializer.asByteBuffer(image);
     }
 
     private static Dimension dim(BufferedImage image) {
@@ -21,7 +21,6 @@ final class PngImageEncoder {
     }
 
     ByteBuffer encode() {
-        ByteBuffer pixelBytes = raster.asByteBuffer();
         ByteBuffer result = ByteBuffer.allocate(bufferSize());
         filter.encode(pixelBytes, result);
         result.position(0);

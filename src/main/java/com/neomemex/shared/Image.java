@@ -72,7 +72,6 @@ public final class Image {
         for (int i=0; i<size; i++) {
             out[i] = in[firstNonZero + i];
         }
-        print((double) size / (double) in.length);
         return new Image(color,type,out,width,height);
     }
 
@@ -84,7 +83,14 @@ public final class Image {
         return c;
     }
 
-    private static void print(Object o) {
-        System.out.println(o);
+    @Override
+    public int hashCode() {
+        return pixels.length + (width << 10) + (height << 20);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Image that = (Image) o;
+        return hashCode() == that.hashCode();
     }
 }

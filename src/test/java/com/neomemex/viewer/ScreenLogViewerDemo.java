@@ -5,7 +5,7 @@ import com.neomemex.shared.Screen;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class ScreenLogViewerTest {
+public class ScreenLogViewerDemo {
 
     static void main0() {
         BufferedImage image = Screen.shot();

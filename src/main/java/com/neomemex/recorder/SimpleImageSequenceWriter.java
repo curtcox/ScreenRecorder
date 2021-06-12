@@ -10,12 +10,12 @@ import java.io.OutputStream;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 
-final class SimpleImageSequenceWriter implements ImageSequenceWriter {
+public final class SimpleImageSequenceWriter implements ImageSequenceWriter {
 
     private Image last;
     private final OutputStream out;
 
-    SimpleImageSequenceWriter(OutputStream out) {
+    public SimpleImageSequenceWriter(OutputStream out) {
         this.out = out;
     }
 
@@ -27,12 +27,14 @@ final class SimpleImageSequenceWriter implements ImageSequenceWriter {
 
     @Override
     public void writeImage(BufferedImage img) throws IOException {
-        RasterSerializer serializer = new RasterSerializer(img);
-        Image current = serializer.image();
-        byte[] bytes = diff(last,current);
+        writeImage(RasterSerializer.serialize(img));
+    }
+
+    public void writeImage(Image image) throws IOException {
+        byte[] bytes = diff(last,image);
         //print(bytes.length + " bytes -> " + Compressor.compress(bytes).length);
         out.write(bytes,0,bytes.length);
-        last = current;
+        last = image;
     }
 
     private byte[] diff(Image a, Image b) {

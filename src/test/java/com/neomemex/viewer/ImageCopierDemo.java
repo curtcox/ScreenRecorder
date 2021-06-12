@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;
 
-final class ImageCopier {
+final class ImageCopierDemo {
 
     private static void show(String title, BufferedImage image) {
         JFrame frame = new JFrame(title);
@@ -25,10 +25,8 @@ final class ImageCopier {
     }
 
     static BufferedImage copy(BufferedImage original) {
-        RasterSerializer serializer = new RasterSerializer(original);
-        return RasterDeserializer.image(serializer.image());
+        return RasterDeserializer.image(RasterSerializer.serialize(original));
     }
-
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
