@@ -137,6 +137,17 @@ public class ImageTest {
         assertEquals(rgb,argb.rgb());
     }
 
+    @Test
+    public void xor_zeros_itself() {
+        Image image = new Image(ints(100),100,100);
+        Image xor = image.xor(image);
+        int[] pixels = xor.pixels();
+        for (int i=0; i<pixels.length; i++) {
+            assertEquals(0,pixels[i]);
+        }
+    }
+
+
     static int[] ints(int size) {
         int[] a = new int[size];
         for (int i=0; i<size; i++) {

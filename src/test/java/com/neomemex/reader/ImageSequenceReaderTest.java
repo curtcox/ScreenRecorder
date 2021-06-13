@@ -32,6 +32,25 @@ public class ImageSequenceReaderTest {
     }
 
     @Test
+    public void can_read_2_of_the_same_image_back_from_bytes() throws IOException {
+        BufferedImage original = Screen.shot();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        SimpleImageSequenceWriter writer = new SimpleImageSequenceWriter(out);
+        Image image = RasterSerializer.serialize(original);
+        writer.writeImage(image);
+        writer.writeImage(image);
+        writer.close();
+
+        ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+        ImageSequenceReader reader = new ImageSequenceReader(in);
+        Image copy1 = reader.read();
+        Image copy2 = reader.read();
+
+        assertEquals(image,copy1);
+        assertEquals(image,copy2);
+    }
+
+    @Test
     public void can_read_compressed_image_back_from_bytes() throws IOException {
         BufferedImage original = Screen.shot();
         ByteArrayOutputStream out = new ByteArrayOutputStream();

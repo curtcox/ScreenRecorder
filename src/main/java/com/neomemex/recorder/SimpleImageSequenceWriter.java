@@ -41,11 +41,11 @@ public final class SimpleImageSequenceWriter implements ImageSequenceWriter {
 
     private void writeImage0(Image image) throws IOException {
         writeType();
-//        if (isFull()) {
+        if (isFull()) {
             writeFull(image);
-//        } else {
-//            writeDelta(image);
-//        }
+        } else {
+            writeDelta(image);
+        }
     }
 
     private boolean isFull() { return last == null; }
@@ -62,14 +62,17 @@ public final class SimpleImageSequenceWriter implements ImageSequenceWriter {
         data.write(bytes,0,bytes.length);
     }
 
-//    private void writeDelta(Image image) throws IOException {
-//        byte[] bytes = diff(last,image);
-//        data.write(bytes,0,bytes.length);
-//    }
+    private void writeDelta(Image image) throws IOException {
+        byte[] bytes = image.xor(last).bytes();
+        data.writeInt(image.size);
+        data.writeShort(image.width);
+        data.writeShort(image.height);
+        data.write(bytes,0,bytes.length);
+    }
 
 
 //    private static byte[] diff(Image a, Image b) {
-//        return a.xor(b).rgb().trim().bytes();
+//        return a.xor(b).trim().bytes();
 //    }
 
     @Override

@@ -29,6 +29,7 @@ public final class Image {
 
     public int[] pixels() { return Arrays.copyOf(pixels,pixels.length); }
     public byte[] bytes() { return Convert.toBytes(pixels); }
+    public Image full()   { return type==Type.full ? this : new Image(color,Type.full,pixels,width,height);}
     public Image rgb()    {
         return color==Color.RGB ? this : new Image(Color.RGB,type,rgb(bytes()),width,height);
     }
@@ -63,29 +64,32 @@ public final class Image {
         return Convert.toInts(out);
     }
 
-    public Image trim() {
-        int firstNonZero = 0;
-        int[] in = pixels;
-        for (int i=firstNonZero; i<in.length; i++) {
-            if (in[i]!=0) {
-                firstNonZero = i;
-                break;
-            }
-        }
-        int lastNonZero = in.length - 1;
-        for (int i=lastNonZero; i>0; i--) {
-            if (in[i]!=0) {
-                lastNonZero = i;
-                break;
-            }
-        }
-        int size = lastNonZero - firstNonZero;
-        int[] out = new int[size];
-        for (int i=0; i<size; i++) {
-            out[i] = in[firstNonZero + i];
-        }
-        return new Image(color,type,out,width,height);
-    }
+    // This logic trims away zeros at the top and bottom.
+    // To actually be used it needs a corresponding undo operation.
+    // Thus, the future might be a Image.Type of patch that stores 4 side-based offsets.
+//    public Image trim() {
+//        int firstNonZero = 0;
+//        int[] in = pixels;
+//        for (int i=firstNonZero; i<in.length; i++) {
+//            if (in[i]!=0) {
+//                firstNonZero = i;
+//                break;
+//            }
+//        }
+//        int lastNonZero = in.length - 1;
+//        for (int i=lastNonZero; i>0; i--) {
+//            if (in[i]!=0) {
+//                lastNonZero = i;
+//                break;
+//            }
+//        }
+//        int size = lastNonZero - firstNonZero;
+//        int[] out = new int[size];
+//        for (int i=0; i<size; i++) {
+//            out[i] = in[firstNonZero + i];
+//        }
+//        return new Image(color,type,out,width,height);
+//    }
 
     private static int[] xor(int[] a, int[] b) {
         int[] c = new int[a.length];
