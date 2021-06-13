@@ -5,21 +5,19 @@ import com.neomemex.viewer.Viewer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 
 public final class Tray {
 
     final Recorder recorder;
     final Viewer.Display display;
     final PopupMenu popup = new PopupMenu();
-    final TrayIcon blackCircle = new TrayIcon(circleImage(Color.BLACK));
-    final TrayIcon   redCircle = new TrayIcon(circleImage(Color.RED));
-    final MenuItem  about = new MenuItem("About");
-    final MenuItem viewer = new MenuItem("Viewer");
-    final MenuItem   exit = new MenuItem("Exit");
-    final SystemTray tray = SystemTray.getSystemTray();
+    final TrayIcon blackCircle = new ActionDot(Color.BLACK)   { @Override void perform() { onBlackDot();   } };
+    final TrayIcon   redCircle = new ActionDot(Color.RED)     { @Override void perform() { onRedDot();     } };
+    final MenuItem    about = new ActionItem("About")    { @Override void perform() { showAbout();    } };
+    final MenuItem settings = new ActionItem("Settings") { @Override void perform() { showSettings(); } };
+    final MenuItem   viewer = new ActionItem("Viewer")   { @Override void perform() { showViewer();   } };
+    final MenuItem     exit = new ActionItem("Exit")     { @Override void perform() { exit();         } };
+    final SystemTray   tray = SystemTray.getSystemTray();
 
     Tray(Recorder recorder, Viewer.Display display) {
         this.recorder = recorder;
@@ -30,21 +28,10 @@ public final class Tray {
         new Tray(recorder,display).install();
     }
 
-    static BufferedImage circleImage(Color color) {
-        int diameter = 10;
-        BufferedImage image = new BufferedImage(diameter, diameter, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = image.createGraphics();
-        g2d.setColor(color);
-        g2d.fillOval(0,0,diameter,diameter);
-        g2d.dispose();
-        return image;
-    }
-
     void install() {
         addMenuItems();
         blackCircle.setPopupMenu(popup);
         add(blackCircle);
-        addListeners();
     }
 
     void add(TrayIcon icon) {
@@ -53,14 +40,6 @@ public final class Tray {
         } catch (AWTException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    void addListeners() {
-        addBlackCircleListener();
-        addRedCircleListener();
-        addAboutListener();
-        addViewerListener();
-        addExitListener();
     }
 
     private void switchToRedButton() {
@@ -73,52 +52,37 @@ public final class Tray {
         add(blackCircle);
     }
 
-    void addBlackCircleListener() {
-        blackCircle.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                switchToRedButton();
-                recorder.start();
-            }
-        });
+    private void onBlackDot() {
+        switchToRedButton();
+        recorder.start();
     }
 
-    void addRedCircleListener() {
-        redCircle.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                switchToBlackButton();
-                recorder.stop();
-            }
-        });
+    private void onRedDot() {
+        switchToBlackButton();
+        recorder.stop();
     }
 
-    void addAboutListener() {
-        about.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null,
-                        "Use this to record the screen");
-            }
-        });
+    private void showAbout() {
+        JOptionPane.showMessageDialog(null, "Use this to record the screen");
     }
 
-    void addViewerListener() {
-        viewer.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                display.show();
-            }
-        });
+    private void showSettings() {
+        JOptionPane.showMessageDialog(null, "Future settings");
     }
 
-    void addExitListener() {
-        exit.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                tray.remove(redCircle);
-                System.exit(0);
-            }
-        });
+    private void showViewer() {
+        display.show();
+    }
+
+    private void exit() {
+        tray.remove(redCircle);
+        System.exit(0);
     }
 
     void addMenuItems() {
         popup.add(about);
+        popup.addSeparator();
+        popup.add(settings);
         popup.addSeparator();
         popup.add(viewer);
         popup.addSeparator();
