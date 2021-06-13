@@ -1,32 +1,12 @@
 package com.neomemex.shared;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-public final class TimeStreamMap {
+public interface TimeStreamMap {
 
-    final FileTimeMap map = new FileTimeMap();
+    OutputStream output(Time time);
 
-    public OutputStream output(Time time) {
-        try {
-            return new FileOutputStream(ensure(map.file(time)));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    InputStream input(Time time);
 
-    public InputStream input(Time time) {
-        try {
-            return new FileInputStream(ensure(map.file(time)));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static File ensure(File file) {
-        File parent = file.getParentFile();
-        if (!parent.exists() && !parent.mkdirs()) {
-            throw new IllegalStateException("Couldn't create dir: " + parent);
-        }
-        return file;
-    }
 }

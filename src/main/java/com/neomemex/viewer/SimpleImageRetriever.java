@@ -8,7 +8,11 @@ import com.neomemex.shared.TimeStreamMap;
 
 final class SimpleImageRetriever implements Viewer.Retriever {
 
-    final TimeStreamMap map = new TimeStreamMap();
+    final TimeStreamMap map;
+
+    SimpleImageRetriever(TimeStreamMap map) {
+        this.map = map;
+    }
 
     @Override
     public Viewer.Response request(Viewer.Request request) {

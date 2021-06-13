@@ -2,6 +2,7 @@ package com.neomemex.viewer;
 
 import com.neomemex.shared.Screen;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -26,6 +27,7 @@ public class ScreenLogViewerDemo {
         final ScreenLogViewer viewer = new ScreenLogViewer(searcher,width,height);
         searcher.display = viewer;
         viewer.setImage(Screen.shot());
+        viewer.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         viewer.show();
     }
 
@@ -35,5 +37,6 @@ public class ScreenLogViewerDemo {
             public void run() { main0(); }
         });
     }
+
 
 }

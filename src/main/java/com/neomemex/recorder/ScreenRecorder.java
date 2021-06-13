@@ -1,8 +1,9 @@
 package com.neomemex.recorder;
 
-import com.neomemex.shared.TimeStreamMap;
+import com.neomemex.shared.FileTimeStreamMap;
 import com.neomemex.shared.Sleep;
 import com.neomemex.shared.Time;
+import com.neomemex.shared.TimeStreamMap;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -22,8 +23,12 @@ public final class ScreenRecorder implements Recorder {
         this.executor = executor;
     }
 
+    public static Recorder startWaitingToRecord(TimeStreamMap map) {
+        return startWaitingToRecord(new AtomicBoolean(),map, Executors.newSingleThreadExecutor());
+    }
+
     public static Recorder startWaitingToRecord() {
-        return startWaitingToRecord(new AtomicBoolean(),new TimeStreamMap(), Executors.newSingleThreadExecutor());
+        return startWaitingToRecord(new FileTimeStreamMap());
     }
 
     static Recorder startWaitingToRecord(AtomicBoolean recording, TimeStreamMap map, ExecutorService executor) {
