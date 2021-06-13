@@ -34,7 +34,7 @@ public final class Tray {
         add(blackCircle);
     }
 
-    void add(TrayIcon icon) {
+    private void add(TrayIcon icon) {
         try {
             tray.add(icon);
         } catch (AWTException e) {
@@ -42,23 +42,18 @@ public final class Tray {
         }
     }
 
-    private void switchToRedButton() {
-        tray.remove(blackCircle);
-        add(redCircle);
-    }
-
-    private void switchToBlackButton() {
-        tray.remove(redCircle);
-        add(blackCircle);
+    private void switchButton(TrayIcon from,TrayIcon to) {
+        tray.remove(from);
+        add(to);
     }
 
     private void onBlackDot() {
-        switchToRedButton();
+        switchButton(blackCircle,redCircle);
         recorder.start();
     }
 
     private void onRedDot() {
-        switchToBlackButton();
+        switchButton(redCircle,blackCircle);
         recorder.stop();
     }
 
@@ -79,7 +74,7 @@ public final class Tray {
         System.exit(0);
     }
 
-    void addMenuItems() {
+    private void addMenuItems() {
         popup.add(about);
         popup.addSeparator();
         popup.add(settings);
