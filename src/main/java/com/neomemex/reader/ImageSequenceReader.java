@@ -21,7 +21,7 @@ public final class ImageSequenceReader {
         return new ImageSequenceReader(new InflaterInputStream(input));
     }
 
-    Image read() {
+    public Image read() {
         try {
             last = read0();
             return last;

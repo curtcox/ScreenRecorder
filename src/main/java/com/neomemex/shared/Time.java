@@ -74,9 +74,10 @@ public final class Time {
 
     public static Time now() { return new Time(t()); }
 
+    public long diff(Time that)  { return Math.abs(t - that.t);}
     public boolean inThePast()   { return t < t(); }
     public boolean inTheFuture() { return t > t(); }
-    private static long t() { return  System.currentTimeMillis(); }
+    private static long t()      { return System.currentTimeMillis(); }
 
     @Override public String toString() {
         return year() + "/" + pad3(day()) + " " + pad(hour()) + ":" + pad(minute()) + ":" + pad(second());

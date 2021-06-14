@@ -19,7 +19,7 @@ public class SimpleImageViewerDemo {
 
     public static void main(String[] args) {
         recorder.start();
-        Sleep.second(1);
+        Sleep.second(5);
         recorder.stop();
         EventQueue.invokeLater(new Runnable() {
             @Override

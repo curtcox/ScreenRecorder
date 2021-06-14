@@ -20,7 +20,7 @@ final class SimpleImageRetriever implements Viewer.Retriever {
     }
 
     private Image image(Time time) {
-        ImageSequenceReader reader = new ImageSequenceReader(map.input(time));
-        return null;
+        ImageSequenceReader reader = ImageSequenceReader.from(map.input(time));
+        return reader.read();
     }
 }
