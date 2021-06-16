@@ -60,6 +60,7 @@ public class ImageTest {
 
     @Test
     public void unequal_images() {
+        unequal(new Image(new Time(0),new int[0],0,0),new Image(t,new int[0],0,0));
         unequal(new Image(t,new int[0],0,0),new Image(t,new int[1],0,0));
         unequal(new Image(t,new int[0],0,0),new Image(t,new int[0],1,0));
         unequal(new Image(t,new int[0],0,0),new Image(t,new int[0],0,1));

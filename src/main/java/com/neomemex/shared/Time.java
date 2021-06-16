@@ -83,6 +83,9 @@ public final class Time {
         return year() + "/" + pad3(day()) + " " + pad(hour()) + ":" + pad(minute()) + ":" + pad(second());
     }
 
+    @Override public int hashCode()           { return (int) t; }
+    @Override public boolean equals(Object o) { return t == ((Time) o).t; }
+
     private static String pad(int count)  { return Pad.last(2,count); }
     private static String pad3(int count) { return Pad.last(3,count); }
 

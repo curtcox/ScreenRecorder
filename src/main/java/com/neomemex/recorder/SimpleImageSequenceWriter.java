@@ -57,6 +57,7 @@ public final class SimpleImageSequenceWriter implements ImageSequenceWriter {
 
     private void writeFull(Image image) throws IOException {
         byte[] bytes = image.bytes();
+        data.writeLong(image.time.t);
         data.writeInt(image.size);
         data.writeShort(image.width);
         data.writeShort(image.height);
@@ -65,6 +66,7 @@ public final class SimpleImageSequenceWriter implements ImageSequenceWriter {
 
     private void writeDelta(Image image) throws IOException {
         byte[] bytes = image.xor(last).bytes();
+        data.writeShort((int) image.time.diff(last.time));
         data.writeInt(image.size);
         data.writeShort(image.width);
         data.writeShort(image.height);

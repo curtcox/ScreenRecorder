@@ -64,9 +64,42 @@ public final class Image {
         return Convert.toInts(out);
     }
 
-    // This logic trims away zeros at the top and bottom.
-    // To actually be used it needs a corresponding undo operation.
-    // Thus, the future might be a Image.Type of patch that stores 4 side-based offsets.
+    private static int[] xor(int[] a, int[] b) {
+        int[] c = new int[a.length];
+        for (int i=0; i<a.length; i++) {
+            c[i] = a[i] ^ b[i];
+        }
+        return c;
+    }
+
+    @Override
+    public int hashCode() {
+        return (typeNumber() + (pixels.length << 2) + (width << 12) + (height << 22)) ^ time.hashCode();
+    }
+
+    private int typeNumber() {
+        return (color == Color.ARGB ? 0 : 1) + (type==Type.full ? 0 : 2);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Image that = (Image) o;
+        return time.equals(that.time) &&
+                color == that.color &&
+                type == that.type &&
+                width == that.width &&
+                height == that.height &&
+                Arrays.equals(pixels,that.pixels);
+    }
+
+    @Override
+    public String toString() {
+        return color + " " + type + " " + width + "x" + height + " " + size;
+    }
+}
+// This logic trims away zeros at the top and bottom.
+// To actually be used it needs a corresponding undo operation.
+// Thus, the future might be a Image.Type of patch that stores 4 side-based offsets.
 //    public Image trim() {
 //        int firstNonZero = 0;
 //        int[] in = pixels;
@@ -90,36 +123,3 @@ public final class Image {
 //        }
 //        return new Image(color,type,out,width,height);
 //    }
-
-    private static int[] xor(int[] a, int[] b) {
-        int[] c = new int[a.length];
-        for (int i=0; i<a.length; i++) {
-            c[i] = a[i] ^ b[i];
-        }
-        return c;
-    }
-
-    @Override
-    public int hashCode() {
-        return typeNumber() + (pixels.length << 2)+ (width << 12) + (height << 22);
-    }
-
-    private int typeNumber() {
-        return (color == Color.ARGB ? 0 : 1) + (type==Type.full ? 0 : 2);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        Image that = (Image) o;
-        return color == that.color &&
-                type == that.type &&
-                width == that.width &&
-                height == that.height &&
-                Arrays.equals(pixels,that.pixels);
-    }
-
-    @Override
-    public String toString() {
-        return color + " " + type + " " + width + "x" + height + " " + size;
-    }
-}

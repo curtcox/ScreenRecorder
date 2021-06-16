@@ -181,4 +181,28 @@ public class TimeTest {
         assertEquals(59,t.minute());
     }
 
+    @Test
+    public void equal_times() {
+        equal(new Time(0),new Time(0));
+        equal(new Time(1),new Time(1));
+    }
+
+    @Test
+    public void unequal_times() {
+        unequal(new Time(0),new Time(1));
+        unequal(new Time(1),new Time(2));
+    }
+
+    void equal(Time a, Time b) {
+        assertEquals(a,b);
+        assertEquals(b,a);
+        assertEquals(a.hashCode(),b.hashCode());
+    }
+
+    void unequal(Time a, Time b) {
+        assertNotEquals(a,b);
+        assertNotEquals(b,a);
+        assertNotEquals(a.hashCode(),b.hashCode());
+    }
+
 }
