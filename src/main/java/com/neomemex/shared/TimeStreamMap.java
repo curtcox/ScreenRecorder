@@ -5,6 +5,8 @@ import java.io.OutputStream;
 
 public interface TimeStreamMap {
 
+    TimeRange range();
+
     OutputStream output(Time time);
 
     InputStream input(Time time);

@@ -8,6 +8,11 @@ public final class MemoryTimeStreamMap implements TimeStreamMap {
 
     final Map<Time,ByteArrayOutputStream> map = new HashMap<>();
 
+    @Override
+    public TimeRange range() {
+        return null;
+    }
+
     public OutputStream output(final Time time) {
         ByteArrayOutputStream out = new ByteArrayOutputStream() {
             @Override public void close() throws IOException {

@@ -6,6 +6,11 @@ public final class FileTimeStreamMap implements TimeStreamMap {
 
     final FileTimeMap map = new FileTimeMap();
 
+    @Override
+    public TimeRange range() {
+        throw new UnsupportedOperationException();
+    }
+
     public OutputStream output(Time time) {
         try {
             return new FileOutputStream(ensure(map.file(time)));
