@@ -89,4 +89,6 @@ public final class Time {
     private static String pad(int count)  { return Pad.last(2,count); }
     private static String pad3(int count) { return Pad.last(3,count); }
 
+    public boolean after(Time that)  { return t > that.t; }
+    public boolean before(Time that) { return t < that.t; }
 }

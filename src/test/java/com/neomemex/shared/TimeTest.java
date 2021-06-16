@@ -182,6 +182,18 @@ public class TimeTest {
     }
 
     @Test
+    public void before() {
+        assertTrue(new Time(0).before(new Time(1)));
+        assertFalse(new Time(1).before(new Time(0)));
+    }
+
+    @Test
+    public void after() {
+        assertTrue(new Time(1).after(new Time(0)));
+        assertFalse(new Time(0).after(new Time(1)));
+    }
+
+    @Test
     public void equal_times() {
         equal(new Time(0),new Time(0));
         equal(new Time(1),new Time(1));
