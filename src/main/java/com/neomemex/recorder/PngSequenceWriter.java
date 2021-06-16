@@ -1,5 +1,7 @@
 package com.neomemex.recorder;
 
+import com.neomemex.shared.Time;
+
 import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
@@ -33,7 +35,7 @@ final class PngSequenceWriter
         }
     }
 
-    public void writeImage(BufferedImage img) {
+    public void writeImage(BufferedImage img, Time time) {
         try {
             ensureOpen();
             writeImage(img, fpsNum, fpsDen);

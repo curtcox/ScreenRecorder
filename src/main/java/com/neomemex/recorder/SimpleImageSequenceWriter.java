@@ -1,6 +1,7 @@
 package com.neomemex.recorder;
 
 import com.neomemex.shared.Image;
+import com.neomemex.shared.Time;
 
 import java.awt.image.BufferedImage;
 import java.io.DataOutputStream;
@@ -25,8 +26,8 @@ public final class SimpleImageSequenceWriter implements ImageSequenceWriter {
 
 
     @Override
-    public void writeImage(BufferedImage img) {
-        writeImage(RasterSerializer.serialize(img));
+    public void writeImage(BufferedImage img, Time time) {
+        writeImage(RasterSerializer.serialize(img,time));
     }
 
     public void writeImage(Image raw) {

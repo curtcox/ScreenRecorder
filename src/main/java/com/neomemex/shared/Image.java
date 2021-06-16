@@ -8,17 +8,17 @@ public final class Image {
     public enum Type { full, delta }
 
     private final int[] pixels;
+    public final Time time;
     public final int size;
     public final int width;
     public final int height;
     public final Color color;
     public final Type type;
 
-    public Image(int[] pixels, int width, int height) {
-        this(Color.ARGB,Type.full,pixels,width,height);
-    }
+    public Image(Time time,int[] pixels, int width, int height) { this(time,Color.ARGB,Type.full,pixels,width,height); }
 
-    public Image(Color color, Type type, int[] pixels, int width, int height) {
+    public Image(Time time, Color color, Type type, int[] pixels, int width, int height) {
+        this.time = time;
         this.pixels = pixels;
         this.width = width;
         this.height = height;
@@ -29,14 +29,14 @@ public final class Image {
 
     public int[] pixels() { return Arrays.copyOf(pixels,pixels.length); }
     public byte[] bytes() { return Convert.toBytes(pixels); }
-    public Image full()   { return type==Type.full ? this : new Image(color,Type.full,pixels,width,height);}
+    public Image full()   { return type==Type.full ? this : new Image(time,color,Type.full,pixels,width,height);}
     public Image rgb()    {
-        return color==Color.RGB ? this : new Image(Color.RGB,type,rgb(bytes()),width,height);
+        return color==Color.RGB ? this : new Image(time,Color.RGB,type,rgb(bytes()),width,height);
     }
     public Image argb()    {
-        return color==Color.ARGB ? this : new Image(Color.ARGB,type,argb(bytes()),width,height);
+        return color==Color.ARGB ? this : new Image(time,Color.ARGB,type,argb(bytes()),width,height);
     }
-    public Image xor(Image that)   { return new Image(color,Type.delta,xor(pixels,that.pixels),width,height); }
+    public Image xor(Image that)   { return new Image(time,color,Type.delta,xor(pixels,that.pixels),width,height); }
 
     private static int[] rgb(byte[] in) {
         int offset = 0;

@@ -2,6 +2,7 @@ package com.neomemex.recorder;
 
 import com.neomemex.shared.Screen;
 import com.neomemex.shared.Sleep;
+import com.neomemex.shared.Time;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +19,7 @@ public final class AnimatedPngFromScreenRecording {
     private void writeScreenshots(int max) throws IOException {
         PngSequenceWriter writer = new PngSequenceWriter(fileName, filterNone, max);
         for (int i = 0; i < max; i++) {
-            writer.writeImage(Screen.shot());
+            writer.writeImage(Screen.shot(), Time.now());
             print(i);
             Sleep.millis(500);
         }

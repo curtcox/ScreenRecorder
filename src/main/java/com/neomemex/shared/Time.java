@@ -53,7 +53,7 @@ public final class Time {
         t = startOfYear[index] + timeThisYear;
     }
 
-    Time(long t) {
+    public Time(long t) {
         this.t = t;
         index = indexFor(t);
         timeThisYear = t - startOfYear[index];

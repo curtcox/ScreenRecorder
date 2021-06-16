@@ -1,6 +1,7 @@
 package com.neomemex.recorder;
 
 import com.neomemex.shared.Image;
+import com.neomemex.shared.Time;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
@@ -22,8 +23,8 @@ public final class RasterSerializer {
         dataElements = dataElements(raster,dim);
     }
 
-    public static Image serialize(BufferedImage image) {
-        return new RasterSerializer(image).image();
+    public static Image serialize(BufferedImage image,Time time) {
+        return new RasterSerializer(image).image(time);
     }
 
     public static ByteBuffer asByteBuffer(BufferedImage image) {
@@ -35,7 +36,7 @@ public final class RasterSerializer {
     }
     
     ByteBuffer asByteBuffer() { return allButLast(threeOf4(byteBuffer(3))); }
-    Image image() { return new Image(dataElements,dim.width, dim.height); }
+    Image image(Time time) { return new Image(time,dataElements,dim.width, dim.height); }
 
     private static int[] dataElements(WritableRaster raster,Dimension dim) {
         return (int[]) raster.getDataElements(0, 0, dim.width, dim.height, null);

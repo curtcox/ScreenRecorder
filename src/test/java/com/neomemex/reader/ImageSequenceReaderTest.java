@@ -4,6 +4,7 @@ import com.neomemex.recorder.RasterSerializer;
 import com.neomemex.recorder.SimpleImageSequenceWriter;
 import com.neomemex.shared.Image;
 import com.neomemex.shared.Screen;
+import com.neomemex.shared.Time;
 import org.junit.Test;
 
 import java.awt.image.BufferedImage;
@@ -20,7 +21,7 @@ public class ImageSequenceReaderTest {
         BufferedImage original = Screen.shot();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         SimpleImageSequenceWriter writer = new SimpleImageSequenceWriter(out);
-        Image image = RasterSerializer.serialize(original);
+        Image image = RasterSerializer.serialize(original, Time.now());
         writer.writeImage(image);
         writer.close();
 
@@ -36,7 +37,7 @@ public class ImageSequenceReaderTest {
         BufferedImage original = Screen.shot();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         SimpleImageSequenceWriter writer = new SimpleImageSequenceWriter(out);
-        Image image = RasterSerializer.serialize(original);
+        Image image = RasterSerializer.serialize(original,Time.now());
         writer.writeImage(image);
         writer.writeImage(image);
         writer.close();
@@ -55,7 +56,7 @@ public class ImageSequenceReaderTest {
         BufferedImage original = Screen.shot();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         SimpleImageSequenceWriter writer = SimpleImageSequenceWriter.to(out);
-        Image image = RasterSerializer.serialize(original);
+        Image image = RasterSerializer.serialize(original,Time.now());
         writer.writeImage(image);
         writer.close();
 

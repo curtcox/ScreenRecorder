@@ -12,22 +12,24 @@ import static org.junit.Assert.*;
  */
 public class ImageTest {
 
+    Time t = new Time(0);
+
     @Test
     public void default_constructor_is_ARGB() {
-        Image image = new Image(new int[0],0,0);
+        Image image = new Image(t,new int[0],0,0);
         assertEquals(Image.Color.ARGB, image.color);
     }
 
     @Test
     public void default_constructor_is_full() {
-        Image image = new Image(new int[0],0,0);
+        Image image = new Image(t,new int[0],0,0);
         assertEquals(Image.Type.full, image.type);
     }
 
     @Test
     public void returns_pixels_from_constructor() {
         int[] pixels = new int[10];
-        Image image = new Image(pixels,0,0);
+        Image image = new Image(t,pixels,0,0);
         assertEquals(pixels.length, image.pixels().length);
         assertEquals(list(pixels), list(image.pixels()) );
     }
@@ -35,40 +37,40 @@ public class ImageTest {
     @Test
     public void returns_width_from_constructor() {
         int width = hashCode();
-        Image image = new Image(new int[0],width,0);
+        Image image = new Image(t,new int[0],width,0);
         assertEquals(width,image.width);
     }
 
     @Test
     public void returns_height_from_constructor() {
         int height = hashCode();
-        Image image = new Image(new int[0],0,height);
+        Image image = new Image(t,new int[0],0,height);
         assertEquals(height, image.height);
     }
 
     @Test
     public void equal_images() {
-        equal(new Image(new int[0],0,0),new Image(new int[0],0,0));
-        equal(new Image(new int[10],10,10),new Image(new int[10],10,10));
-        equal(new Image(new int[1],0,0),new Image(new int[1],0,0));
-        equal(new Image(new int[1],2,0),new Image(new int[1],2,0));
-        equal(new Image(new int[1],2,3),new Image(new int[1],2,3));
-        equal(new Image(new int[0],0,0),new Image(Image.Color.ARGB, Image.Type.full,new int[0],0,0));
+        equal(new Image(t,new int[0],0,0),new Image(t,new int[0],0,0));
+        equal(new Image(t,new int[10],10,10),new Image(t,new int[10],10,10));
+        equal(new Image(t,new int[1],0,0),new Image(t,new int[1],0,0));
+        equal(new Image(t,new int[1],2,0),new Image(t,new int[1],2,0));
+        equal(new Image(t,new int[1],2,3),new Image(t,new int[1],2,3));
+        equal(new Image(t,new int[0],0,0),new Image(t,Image.Color.ARGB, Image.Type.full,new int[0],0,0));
     }
 
     @Test
     public void unequal_images() {
-        unequal(new Image(new int[0],0,0),new Image(new int[1],0,0));
-        unequal(new Image(new int[0],0,0),new Image(new int[0],1,0));
-        unequal(new Image(new int[0],0,0),new Image(new int[0],0,1));
-        unequal(new Image(new int[0],0,0),new Image(Image.Color.RGB, Image.Type.full,new int[0],0,0));
-        unequal(new Image(new int[0],0,0),new Image(Image.Color.ARGB, Image.Type.delta,new int[0],0,0));
+        unequal(new Image(t,new int[0],0,0),new Image(t,new int[1],0,0));
+        unequal(new Image(t,new int[0],0,0),new Image(t,new int[0],1,0));
+        unequal(new Image(t,new int[0],0,0),new Image(t,new int[0],0,1));
+        unequal(new Image(t,new int[0],0,0),new Image(t,Image.Color.RGB, Image.Type.full,new int[0],0,0));
+        unequal(new Image(t,new int[0],0,0),new Image(t,Image.Color.ARGB, Image.Type.delta,new int[0],0,0));
     }
 
     @Test
     public void unequal_images_but_might_have_same_hash_code() {
-        justNotEqual(new Image(new int[]{0},10,10),new Image(new int[]{1},10,10));
-        justNotEqual(new Image(new int[]{1,2,3,4},10,10),new Image(new int[]{1,2,33,4},10,10));
+        justNotEqual(new Image(t,new int[]{0},10,10),new Image(t,new int[]{1},10,10));
+        justNotEqual(new Image(t,new int[]{1,2,3,4},10,10),new Image(t,new int[]{1,2,33,4},10,10));
     }
 
     void equal(Image a, Image b) {
@@ -97,7 +99,7 @@ public class ImageTest {
 
     @Test
     public void rgb_is_smaller_than_argb() {
-        Image image = new Image(ints(100),100,100);
+        Image image = new Image(t,ints(100),100,100);
         assertEquals(Image.Color.ARGB,image.color);
         assertEquals(100,image.size);
         Image rgb = image.rgb();
@@ -107,7 +109,7 @@ public class ImageTest {
 
     @Test
     public void rgb_is_idempotent() {
-        Image image = new Image(ints(100),100,100);
+        Image image = new Image(t,ints(100),100,100);
         Image rgb1 = image.rgb();
         assertEquals(rgb1,rgb1.rgb());
         assertSame(rgb1,rgb1.rgb());
@@ -115,7 +117,7 @@ public class ImageTest {
 
     @Test
     public void argb_is_idempotent() {
-        Image image = new Image(ints(100),100,100);
+        Image image = new Image(t,ints(100),100,100);
         Image argb1 = image.argb();
         assertEquals(argb1,argb1.argb());
         assertSame(argb1,argb1.argb());
@@ -123,7 +125,7 @@ public class ImageTest {
 
     @Test
     public void argb_undoes_rgb() {
-        Image image = new Image(ints(100),100,100);
+        Image image = new Image(t,ints(100),100,100);
         Image argb = image.argb();
         Image rgb = argb.rgb();
         assertEquals(argb,rgb.argb());
@@ -131,7 +133,7 @@ public class ImageTest {
 
     @Test
     public void rgb_undoes_argb() {
-        Image image = new Image(ints(100),100,100);
+        Image image = new Image(t,ints(100),100,100);
         Image rgb = image.rgb();
         Image argb = rgb.argb();
         assertEquals(rgb,argb.rgb());
@@ -139,14 +141,13 @@ public class ImageTest {
 
     @Test
     public void xor_zeros_itself() {
-        Image image = new Image(ints(100),100,100);
+        Image image = new Image(t,ints(100),100,100);
         Image xor = image.xor(image);
         int[] pixels = xor.pixels();
         for (int i=0; i<pixels.length; i++) {
             assertEquals(0,pixels[i]);
         }
     }
-
 
     static int[] ints(int size) {
         int[] a = new int[size];

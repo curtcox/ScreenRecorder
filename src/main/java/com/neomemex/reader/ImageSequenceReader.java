@@ -2,6 +2,7 @@ package com.neomemex.reader;
 
 import com.neomemex.shared.Convert;
 import com.neomemex.shared.Image;
+import com.neomemex.shared.Time;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -49,24 +50,26 @@ public final class ImageSequenceReader {
     }
 
     private Image readFull() throws IOException {
+        Time time = new Time(data.readLong());
         int   size = data.readInt();
         int  width = data.readShort();
         int height = data.readShort();
         byte[] bytes = new byte[size * 4];
         data.readFully(bytes);
-        Image rgb = new Image(
+        Image rgb = new Image(time,
                 Image.Color.RGB,Image.Type.full,
                 Convert.toInts(bytes),width,height);
         return rgb.argb();
     }
 
     private Image readDelta() throws IOException {
+        Time  time = new Time(last.time.t + data.readShort());
         int   size = data.readInt();
         int  width = data.readShort();
         int height = data.readShort();
         byte[] bytes = new byte[size * 4];
         data.readFully(bytes);
-        Image rgb = new Image(
+        Image rgb = new Image(time,
                 Image.Color.RGB, Image.Type.delta,
                 Convert.toInts(bytes),width,height);
         return rgb.argb();

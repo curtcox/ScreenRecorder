@@ -3,6 +3,7 @@ package com.neomemex.viewer;
 import com.neomemex.DemoFrame;
 import com.neomemex.recorder.RasterSerializer;
 import com.neomemex.shared.Screen;
+import com.neomemex.shared.Time;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +22,7 @@ final class ImageCopierDemo {
     }
 
     static BufferedImage copy(BufferedImage original) {
-        return RasterDeserializer.image(RasterSerializer.serialize(original));
+        return RasterDeserializer.image(RasterSerializer.serialize(original, Time.now()));
     }
 
     public static void main(String[] args) throws Exception {

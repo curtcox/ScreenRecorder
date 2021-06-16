@@ -24,7 +24,7 @@ final class ScreenMinuteRecorder {
     void writeScreenshots() throws IOException {
         while (endTime.inTheFuture()) {
             if (recording.get()) {
-                writer.writeImage(Screen.shot());
+                writer.writeImage(Screen.shot(),Time.now());
             }
             Sleep.millis(sleepTime);
         }
