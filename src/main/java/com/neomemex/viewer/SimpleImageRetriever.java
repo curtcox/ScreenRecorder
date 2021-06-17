@@ -21,6 +21,17 @@ final class SimpleImageRetriever implements Viewer.Retriever {
 
     private Image image(Time time) {
         ImageSequenceReader reader = ImageSequenceReader.from(map.input(time));
-        return reader.read();
+        Image last = null;
+        for (Image image : reader) {
+            if (image.time.after(time)) {
+                if (last==null) {
+                    return image;
+                }
+                return time.diff(image.time) < time.diff(last.time) ? image : last;
+            } else {
+                last = image;
+            }
+        }
+        return last;
     }
 }

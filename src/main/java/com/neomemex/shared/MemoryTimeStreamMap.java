@@ -6,11 +6,12 @@ import java.util.Map;
 
 public final class MemoryTimeStreamMap implements TimeStreamMap {
 
-    final Map<Time,ByteArrayOutputStream> map = new HashMap<>();
+    private TimeRange range;
+    private final Map<Time,ByteArrayOutputStream> map = new HashMap<>();
 
     @Override
     public TimeRange range() {
-        return null;
+        return range;
     }
 
     public OutputStream output(final Time time) {
@@ -18,10 +19,15 @@ public final class MemoryTimeStreamMap implements TimeStreamMap {
             @Override public void close() throws IOException {
                 super.close();
                 System.out.println("closed");
-                map.put(time,this);
+                add(this,time);
             }
         };
         return out;
+    }
+
+    private void add(ByteArrayOutputStream stream,Time time) {
+        range = range==null ? TimeRange.of(time,time) : range.plus(time);
+        map.put(time,stream);
     }
 
     public InputStream input(Time time) {

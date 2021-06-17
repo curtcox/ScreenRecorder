@@ -7,9 +7,12 @@ import com.neomemex.shared.Time;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.zip.InflaterInputStream;
 
-public final class ImageSequenceReader {
+public final class ImageSequenceReader
+        implements Iterable<Image>
+{
 
     private Image last;
     final DataInputStream data;
@@ -26,6 +29,14 @@ public final class ImageSequenceReader {
         try {
             last = read0();
             return last;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean moreImages() {
+        try {
+            return data.available() > 0;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -75,4 +86,12 @@ public final class ImageSequenceReader {
         return rgb.argb();
     }
 
+    @Override
+    public Iterator<Image> iterator() {
+        return new Iterator<Image>() {
+            @Override public boolean hasNext() { return moreImages(); }
+            @Override public Image  next() { return read(); }
+            @Override public void remove() { throw new UnsupportedOperationException(); }
+        };
+    }
 }
