@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 public class SimpleImageViewerDemo {
 
     static final TimeStreamMap            store = new MemoryTimeStreamMap();
-    static final SimpleImageRetriever retriever = new SimpleImageRetriever(store);
+    static final Viewer.Retriever     retriever = SimpleImageRetriever.of(store);
     static final ExecutorService       executor = Executors.newSingleThreadExecutor();
     static final SimpleImageRequestor requestor = new SimpleImageRequestor(retriever,executor);
     static final ScreenLogViewer         viewer = new ScreenLogViewer(requestor, Screen.width(),Screen.height());
@@ -19,7 +19,7 @@ public class SimpleImageViewerDemo {
 
     public static void main(String[] args) {
         recorder.start();
-        Sleep.second(5);
+        Sleep.second(25);
         recorder.stop();
         EventQueue.invokeLater(new Runnable() {
             @Override

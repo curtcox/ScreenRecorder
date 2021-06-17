@@ -5,13 +5,16 @@ import com.neomemex.shared.Image;
 import com.neomemex.shared.Time;
 import com.neomemex.shared.TimeStreamMap;
 
-
 final class SimpleImageRetriever implements Viewer.Retriever {
 
     final TimeStreamMap map;
 
-    SimpleImageRetriever(TimeStreamMap map) {
+    private SimpleImageRetriever(TimeStreamMap map) {
         this.map = map;
+    }
+
+    static Viewer.Retriever of(TimeStreamMap map) {
+        return new SimpleImageRetriever(map);
     }
 
     @Override
