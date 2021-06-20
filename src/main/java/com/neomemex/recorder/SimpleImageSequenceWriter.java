@@ -1,7 +1,7 @@
 package com.neomemex.recorder;
 
 import com.neomemex.shared.Image;
-import com.neomemex.shared.RuntimeIOException;
+import com.neomemex.store.RuntimeIOException;
 import com.neomemex.shared.Time;
 
 import java.awt.image.BufferedImage;

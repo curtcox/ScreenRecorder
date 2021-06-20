@@ -3,6 +3,8 @@ package com.neomemex.viewer;
 import com.neomemex.reader.SimpleImageRetriever;
 import com.neomemex.recorder.*;
 import com.neomemex.shared.*;
+import com.neomemex.store.FileTimeStreamMap;
+import com.neomemex.store.TimeStreamMap;
 import com.neomemex.tray.Tray;
 
 import java.awt.*;

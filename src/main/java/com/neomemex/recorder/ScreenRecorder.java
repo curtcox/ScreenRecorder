@@ -1,9 +1,9 @@
 package com.neomemex.recorder;
 
-import com.neomemex.shared.FileTimeStreamMap;
+import com.neomemex.store.FileTimeStreamMap;
 import com.neomemex.shared.Sleep;
 import com.neomemex.shared.Time;
-import com.neomemex.shared.TimeStreamMap;
+import com.neomemex.store.TimeStreamMap;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;

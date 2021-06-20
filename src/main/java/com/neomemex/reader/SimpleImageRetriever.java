@@ -2,7 +2,7 @@ package com.neomemex.reader;
 
 import com.neomemex.shared.Image;
 import com.neomemex.shared.Time;
-import com.neomemex.shared.TimeStreamMap;
+import com.neomemex.store.TimeStreamMap;
 import com.neomemex.viewer.Viewer;
 
 import java.util.Map;

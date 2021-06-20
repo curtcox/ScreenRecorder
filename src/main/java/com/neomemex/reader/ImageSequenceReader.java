@@ -2,7 +2,7 @@ package com.neomemex.reader;
 
 import com.neomemex.shared.Convert;
 import com.neomemex.shared.Image;
-import com.neomemex.shared.RuntimeIOException;
+import com.neomemex.store.RuntimeIOException;
 import com.neomemex.shared.Time;
 
 import java.io.DataInputStream;

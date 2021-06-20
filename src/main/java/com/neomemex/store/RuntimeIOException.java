@@ -1,4 +1,4 @@
-package com.neomemex.shared;
+package com.neomemex.store;
 
 import java.io.IOException;
 

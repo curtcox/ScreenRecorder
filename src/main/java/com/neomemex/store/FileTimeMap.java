@@ -1,4 +1,7 @@
-package com.neomemex.shared;
+package com.neomemex.store;
+
+import com.neomemex.shared.Pad;
+import com.neomemex.shared.Time;
 
 import java.io.File;
 
