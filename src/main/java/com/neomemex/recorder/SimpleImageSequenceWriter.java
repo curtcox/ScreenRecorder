@@ -38,7 +38,6 @@ public final class SimpleImageSequenceWriter implements ImageSequenceWriter {
         } catch (IOException e) {
             throw new RuntimeIOException(e);
         }
-        System.out.println("Wrote " + image);
         last = image;
     }
 
@@ -68,7 +67,6 @@ public final class SimpleImageSequenceWriter implements ImageSequenceWriter {
 
     private void writeDelta(Image image) throws IOException {
         byte[] bytes = image.xor(last).bytes();
-        System.out.println("diff =" + image.time.diff(last.time));
         data.writeShort((int) image.time.diff(last.time));
         data.writeInt(image.size);
         data.writeShort(image.width);

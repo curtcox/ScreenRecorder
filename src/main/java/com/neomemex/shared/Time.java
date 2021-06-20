@@ -99,14 +99,12 @@ public final class Time implements Comparable<Time> {
     public boolean before(Time that) { return t < that.t; }
 
     public static Time closestTimeIn(Time target, Set<Time> times) {
-        System.out.println("Look for " + target + " in " + times);
         Time best = null;
         for (Time t : times) {
             if (best==null || target.diff(t) < target.diff(best)) {
                 best = t;
             }
         }
-        System.out.println("Picked " + best);
         return best;
     }
 

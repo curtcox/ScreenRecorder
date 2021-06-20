@@ -6,6 +6,7 @@ import com.neomemex.shared.RuntimeIOException;
 import com.neomemex.shared.Time;
 
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -37,14 +38,14 @@ final class ImageSequenceReader {
         }
     }
 
-    private boolean moreImages() {
-        try {
-            System.out.println(data.available() + " available");
-            return data.available() > 0;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    private boolean moreImages() {
+//        try {
+//            System.out.println(data.available() + " available");
+//            return data.available() > 0;
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     private Image read0() throws IOException {
         Image.Type type = readType();
@@ -79,7 +80,6 @@ final class ImageSequenceReader {
 
     private Image readDelta() throws IOException {
         int   diff = data.readShort();
-        System.out.println("read diff = " + diff);
         Time  time = new Time(last.time.t + diff);
         int   size = data.readInt();
         int  width = data.readShort();
@@ -89,7 +89,6 @@ final class ImageSequenceReader {
         Image rgb = new Image(time,
                 Image.Color.RGB, Image.Type.delta,
                 Convert.toInts(bytes),width,height);
-        System.out.println("read rgb = " + rgb);
         return rgb.argb();
     }
 
@@ -98,13 +97,13 @@ final class ImageSequenceReader {
         try {
             for (;;) {
                 Image image = read();
-                System.out.println("ISR read " + image);
                 images.put(image.time, image);
             }
         } catch (RuntimeIOException e) {
-            e.printStackTrace();
+            if (!(e.getCause() instanceof EOFException)) {
+                e.printStackTrace();
+            }
         }
-        System.out.println("Read images " + images);
         return images;
     }
 
