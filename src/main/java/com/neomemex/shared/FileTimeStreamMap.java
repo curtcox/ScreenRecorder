@@ -15,7 +15,7 @@ public final class FileTimeStreamMap implements TimeStreamMap {
         try {
             return new FileOutputStream(ensure(map.file(time)));
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeIOException(e);
         }
     }
 
@@ -23,7 +23,7 @@ public final class FileTimeStreamMap implements TimeStreamMap {
         try {
             return new FileInputStream(ensure(map.file(time)));
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeIOException(e);
         }
     }
 
