@@ -10,6 +10,7 @@ public interface Viewer {
 
     interface Display {
         void show();
+        void setTime(Time time);
         void setImage(BufferedImage image); // UI -- Invokers must always be on the EDT.
     }
 
@@ -24,7 +25,7 @@ public interface Viewer {
 
     final class Request {
 
-        final String text; final Time time;
+        public final String text; public final Time time;
 
         public Request(String text, Time time) {
             this.text = text;

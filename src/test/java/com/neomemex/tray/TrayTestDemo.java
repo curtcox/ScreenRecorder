@@ -1,6 +1,7 @@
 package com.neomemex.tray;
 
 import com.neomemex.recorder.Recorder;
+import com.neomemex.shared.Time;
 import com.neomemex.viewer.Viewer;
 
 import javax.swing.*;
@@ -17,6 +18,7 @@ public class TrayTestDemo {
     static class FakeDisplay implements Viewer.Display {
         @Override public void show() { JOptionPane.showMessageDialog(null, "Fake display"); }
         @Override public void setImage(BufferedImage image) {}
+        @Override public void setTime(Time t) {}
     }
 
     public static void main(String[] args) {

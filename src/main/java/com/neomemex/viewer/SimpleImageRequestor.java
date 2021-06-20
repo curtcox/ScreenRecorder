@@ -1,5 +1,6 @@
 package com.neomemex.viewer;
 
+import com.neomemex.shared.Image;
 import com.neomemex.shared.Sleep;
 
 import java.awt.image.BufferedImage;
@@ -53,11 +54,13 @@ final class SimpleImageRequestor implements Viewer.Requestor {
     }
 
     private void process(final Viewer.Request request) {
-        final BufferedImage image = RasterDeserializer.image(retriever.request(request).image);
+        final Image image = retriever.request(request).image;
+        final BufferedImage bufferedImage = RasterDeserializer.image(image);
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                display.setImage(image);
+                display.setTime(image.time);
+                display.setImage(bufferedImage);
             }
         });
     }

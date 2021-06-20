@@ -2,40 +2,44 @@ package com.neomemex.reader;
 
 import com.neomemex.shared.Convert;
 import com.neomemex.shared.Image;
+import com.neomemex.shared.RuntimeIOException;
 import com.neomemex.shared.Time;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
+import java.util.*;
 import java.util.zip.InflaterInputStream;
 
-public final class ImageSequenceReader
-        implements Iterable<Image>
-{
+final class ImageSequenceReader {
 
     private Image last;
     final DataInputStream data;
 
-    public ImageSequenceReader(InputStream input) {
+    ImageSequenceReader(InputStream input) {
         data = new DataInputStream(input);
     }
 
-    public static ImageSequenceReader from(InputStream input) {
+    static ImageSequenceReader from(InputStream input) {
         return new ImageSequenceReader(new InflaterInputStream(input));
     }
 
-    public Image read() {
+    static SortedMap<Time,Image> allImagesFrom(InputStream input) {
+        return from(input).readAllImages();
+    }
+
+    Image read() {
         try {
             last = read0();
             return last;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeIOException(e);
         }
     }
 
     private boolean moreImages() {
         try {
+            System.out.println(data.available() + " available");
             return data.available() > 0;
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -48,7 +52,7 @@ public final class ImageSequenceReader
             return readFull();
         } else {
             Image delta = readDelta();
-            return last.xor(delta).full();
+            return last.xor(delta).full().time(delta.time);
         }
     }
 
@@ -74,7 +78,9 @@ public final class ImageSequenceReader
     }
 
     private Image readDelta() throws IOException {
-        Time  time = new Time(last.time.t + data.readShort());
+        int   diff = data.readShort();
+        System.out.println("read diff = " + diff);
+        Time  time = new Time(last.time.t + diff);
         int   size = data.readInt();
         int  width = data.readShort();
         int height = data.readShort();
@@ -83,15 +89,23 @@ public final class ImageSequenceReader
         Image rgb = new Image(time,
                 Image.Color.RGB, Image.Type.delta,
                 Convert.toInts(bytes),width,height);
+        System.out.println("read rgb = " + rgb);
         return rgb.argb();
     }
 
-    @Override
-    public Iterator<Image> iterator() {
-        return new Iterator<Image>() {
-            @Override public boolean hasNext() { return moreImages(); }
-            @Override public Image  next() { return read(); }
-            @Override public void remove() { throw new UnsupportedOperationException(); }
-        };
+    private SortedMap<Time,Image> readAllImages() {
+        SortedMap<Time,Image> images = new TreeMap<>();
+        try {
+            for (;;) {
+                Image image = read();
+                System.out.println("ISR read " + image);
+                images.put(image.time, image);
+            }
+        } catch (RuntimeIOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Read images " + images);
+        return images;
     }
+
 }

@@ -1,6 +1,7 @@
 package com.neomemex.recorder;
 
 import com.neomemex.shared.Image;
+import com.neomemex.shared.RuntimeIOException;
 import com.neomemex.shared.Time;
 
 import java.awt.image.BufferedImage;
@@ -35,8 +36,9 @@ public final class SimpleImageSequenceWriter implements ImageSequenceWriter {
         try {
             writeImage0(image);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeIOException(e);
         }
+        System.out.println("Wrote " + image);
         last = image;
     }
 
@@ -66,13 +68,13 @@ public final class SimpleImageSequenceWriter implements ImageSequenceWriter {
 
     private void writeDelta(Image image) throws IOException {
         byte[] bytes = image.xor(last).bytes();
+        System.out.println("diff =" + image.time.diff(last.time));
         data.writeShort((int) image.time.diff(last.time));
         data.writeInt(image.size);
         data.writeShort(image.width);
         data.writeShort(image.height);
         data.write(bytes,0,bytes.length);
     }
-
 
 //    private static byte[] diff(Image a, Image b) {
 //        return a.xor(b).trim().bytes();

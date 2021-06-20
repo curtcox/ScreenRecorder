@@ -1,5 +1,6 @@
 package com.neomemex.viewer;
 
+import com.neomemex.reader.SimpleImageRetriever;
 import com.neomemex.recorder.Recorder;
 import com.neomemex.recorder.ScreenRecorder;
 import com.neomemex.shared.*;
@@ -18,9 +19,11 @@ public class SimpleImageViewerDemo {
     static final Recorder              recorder = ScreenRecorder.startWaitingToRecord(store);
 
     public static void main(String[] args) {
+        System.out.println("Started recording");
         recorder.start();
         Sleep.second(25);
         recorder.stop();
+        System.out.println("Stopped recording");
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {

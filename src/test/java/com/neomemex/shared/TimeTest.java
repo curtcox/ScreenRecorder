@@ -2,6 +2,10 @@ package com.neomemex.shared;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.junit.Assert.*;
 
 public class TimeTest {
@@ -203,6 +207,20 @@ public class TimeTest {
     public void unequal_times() {
         unequal(new Time(0),new Time(1));
         unequal(new Time(1),new Time(2));
+    }
+
+    @Test
+    public void closest() {
+        Set<Time> times = new HashSet<>();
+        times.addAll(Arrays.asList(new Time[] {new Time(1000), new Time(2000), new Time(3000)}));
+        assertEquals(new Time(1000),Time.closestTimeIn(new Time(10),times));
+        assertEquals(new Time(1000),Time.closestTimeIn(new Time(1010),times));
+        assertEquals(new Time(1000),Time.closestTimeIn(new Time(1499),times));
+        assertEquals(new Time(2000),Time.closestTimeIn(new Time(1501),times));
+        assertEquals(new Time(2000),Time.closestTimeIn(new Time(2499),times));
+        assertEquals(new Time(3000),Time.closestTimeIn(new Time(2501),times));
+        assertEquals(new Time(3000),Time.closestTimeIn(new Time(3499),times));
+        assertEquals(new Time(3000),Time.closestTimeIn(new Time(9999999),times));
     }
 
     void equal(Time a, Time b) {

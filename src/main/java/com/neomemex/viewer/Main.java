@@ -1,5 +1,6 @@
 package com.neomemex.viewer;
 
+import com.neomemex.reader.SimpleImageRetriever;
 import com.neomemex.recorder.*;
 import com.neomemex.shared.*;
 import com.neomemex.tray.Tray;

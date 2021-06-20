@@ -29,6 +29,7 @@ public final class Image {
 
     public int[] pixels() { return Arrays.copyOf(pixels,pixels.length); }
     public byte[] bytes() { return Convert.toBytes(pixels); }
+    public Image time(Time time) { return new Image(time,color,type,pixels,width,height); }
     public Image full()   { return type==Type.full ? this : new Image(time,color,Type.full,pixels,width,height);}
     public Image rgb()    {
         return color==Color.RGB ? this : new Image(time,Color.RGB,type,rgb(bytes()),width,height);
@@ -94,7 +95,7 @@ public final class Image {
 
     @Override
     public String toString() {
-        return color + " " + type + " " + width + "x" + height + " " + size;
+        return time.t + " " + color + " " + type + " " + width + "x" + height + " " + size;
     }
 }
 // This logic trims away zeros at the top and bottom.

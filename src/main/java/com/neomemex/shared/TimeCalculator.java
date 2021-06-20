@@ -21,10 +21,8 @@ public final class TimeCalculator {
     static final int   HOUR = 2;
     static final int MINUTE = 3;
     static final int SECOND = 4;
-    public Time timeFrom(double[] parts,int focus) {
-        long t = (long) (start.t + (parts[YEAR] * duration));
-        Time time = new Time(t);
-        if (focus==YEAR)   return time;
+    public Time timeFrom(Time time,double[] parts,int focus) {
+        if (focus==YEAR)   return timeFocusYear(parts[YEAR]);
         if (focus==DAY)    return timeFocusDay(time,parts[DAY]);
         if (focus==HOUR)   return timeFocusHour(time,parts[HOUR]);
         if (focus==MINUTE) return timeFocusMinute(time,parts[MINUTE]);
@@ -32,20 +30,28 @@ public final class TimeCalculator {
         throw new IllegalArgumentException();
     }
 
+    private Time timeFocusYear(double year) {
+        return new Time((long) (start.t + (year * duration)));
+    }
+
     private Time timeFocusDay(Time time,double day) {
-        return new Time(time.year(), outOf(day, 365), time.hour(),time.minute());
+        Time start = new Time(time.year(),0,0,0,0,0);
+        return new Time(start.t + (long)(day * Time.MILLIS_PER_YEAR));
     }
 
     private Time timeFocusHour(Time time,double hour) {
-        return new Time(time.year(), time.day(), outOf(hour,24),time.minute());
+        Time start = new Time(time.year(),time.day(),0,0,0,0);
+        return new Time(start.t + (long)(hour * Time.MILLIS_PER_DAY));
     }
 
     private Time timeFocusMinute(Time time,double minute) {
-        return new Time(time.year(), time.day(), time.hour(), outOf(minute,60));
+        Time start = new Time(time.year(),time.day(),time.hour(),0,0,0);
+        return new Time(start.t + (long)(minute * Time.MILLIS_PER_HOUR));
     }
 
     private Time timeFocusSecond(Time time,double second) {
-        return new Time(time.year(), time.day(), time.hour(),time.minute(),outOf(second,60),0);
+        Time start = new Time(time.year(),time.day(),time.hour(),time.minute(),0,0);
+        return new Time(start.t + (long)(second * Time.MILLIS_PER_MINUTE));
     }
 
     public double   year(Time time) { return (double) duration(start,time) / (double) duration; }
@@ -54,6 +60,5 @@ public final class TimeCalculator {
     public double minute(Time time) { return fraction(time.minute(),60); }
     public double second(Time time) { return fraction(time.second(),60); }
 
-    private static int outOf(double x, int max) { return (int) (x * max); }
     private static double fraction(int x, int max) { return (double) x / (double) max; }
 }

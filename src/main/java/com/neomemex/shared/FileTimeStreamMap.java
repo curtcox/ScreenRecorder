@@ -7,7 +7,7 @@ public final class FileTimeStreamMap implements TimeStreamMap {
     final FileTimeMap map = new FileTimeMap();
 
     @Override
-    public TimeRange range() {
+    public Time nearest(Time time) {
         throw new UnsupportedOperationException();
     }
 

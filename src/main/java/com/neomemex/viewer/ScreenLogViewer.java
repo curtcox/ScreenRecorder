@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage;
 final class ScreenLogViewer implements Viewer.Display {
 
     private TimePartSlider lastTimePartChanged;
-    final JFrame      frame = new JFrame("Viewer");
+    final JFrame             frame = new JFrame("Viewer");
     final TimePartSlider     years = slider(0);
     final TimePartSlider      days = slider(1);
     final TimePartSlider     hours = slider(2);
@@ -23,7 +23,8 @@ final class ScreenLogViewer implements Viewer.Display {
     final TimePartSlider   seconds = slider(4);
     final JTextField search = new JTextField();
     final JLabel imageLabel = new JLabel();
-    final JLabel  timeLabel = newTimeLabel();
+    final TimeLabel targetTime = new TimeLabel();
+    final TimeLabel actualTime = new TimeLabel();
     final Listener listener = new Listener();
     final Viewer.Requestor requestor;
     final TimeCalculator calculator = new TimeCalculator();
@@ -67,12 +68,20 @@ final class ScreenLogViewer implements Viewer.Display {
         }
     }
 
-    private static JLabel newTimeLabel() {
-        JLabel label = new JLabel("----/--- --:--:--");
-        label.setPreferredSize(new Dimension(130,20));
-        label.setFont(new Font( "Monospaced", Font.PLAIN, 12 ));
-        return label;
+    static class TimeLabel extends JLabel {
+        Time time;
+        TimeLabel() {
+            super("----/--- --:--:--");
+            setPreferredSize(new Dimension(130,20));
+            setFont(new Font( "Monospaced", Font.PLAIN, 12 ));
+        }
+        Time getTime() {return time;}
+        void setTime(Time time) {
+            this.time = time;
+            setText(time.toString());
+        }
     }
+
 
     void setSize(int width,int height) {
         frame.setSize(width,height);
@@ -94,7 +103,8 @@ final class ScreenLogViewer implements Viewer.Display {
         bottomSliders.add(minutes);
         bottomSliders.add(seconds);
         JPanel bottom = new JPanel(new BorderLayout());
-        bottom.add(timeLabel,BorderLayout.WEST);
+        bottom.add(targetTime,BorderLayout.WEST);
+        bottom.add(actualTime,BorderLayout.EAST);
         bottom.add(bottomSliders,BorderLayout.CENTER);
         frame.add(bottom,BorderLayout.SOUTH);
     }
@@ -108,8 +118,14 @@ final class ScreenLogViewer implements Viewer.Display {
         search.getDocument().addDocumentListener(listener);
     }
 
+    @Override
     public void setImage(BufferedImage image) {
         imageLabel.setIcon(new ImageIcon(image.getScaledInstance(image.getWidth(),image.getHeight(),16)));
+    }
+
+    @Override
+    public void setTime(Time time) {
+        actualTime.setTime(time);
     }
 
     void updateRequest(boolean full) {
@@ -122,11 +138,11 @@ final class ScreenLogViewer implements Viewer.Display {
 
     private Time fromSliders() {
         double[] parts = new double[] {value(years),value(days),value(hours),value(minutes),value(seconds)};
-        return calculator.timeFrom(parts,lastTimePartChanged.index);
+        return calculator.timeFrom(targetTime.getTime(),parts,lastTimePartChanged.index);
     }
 
     private void updateTime(Time time) {
-        timeLabel.setText(" " + time.toString());
+        targetTime.setTime(time);
         set(years,calculator.year(time));
         set(days,calculator.day(time));
         set(hours,calculator.hour(time));

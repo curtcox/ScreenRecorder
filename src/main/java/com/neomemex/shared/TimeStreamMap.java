@@ -5,7 +5,7 @@ import java.io.OutputStream;
 
 public interface TimeStreamMap {
 
-    TimeRange range();
+    Time nearest(Time time);
 
     OutputStream output(Time time);
 

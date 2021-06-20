@@ -1,17 +1,19 @@
 package com.neomemex.shared;
 
+import java.util.Set;
+
 // Immutable instant
-public final class Time {
+public final class Time implements Comparable<Time> {
 
     public final long t;
     private final long timeThisYear;
     private final int index;
 
-    private static long MILLIS_PER_SECOND     = 1000;
-    private static long MILLIS_PER_MINUTE     = MILLIS_PER_SECOND * 60;
-    private static long MILLIS_PER_HOUR       = MILLIS_PER_MINUTE * 60;
-    private static long MILLIS_PER_DAY        = MILLIS_PER_HOUR   * 24;
-    private static long MILLIS_PER_YEAR       = MILLIS_PER_DAY    * 365;
+    public static long MILLIS_PER_SECOND     = 1000;
+    public static long MILLIS_PER_MINUTE     = MILLIS_PER_SECOND * 60;
+    public static long MILLIS_PER_HOUR       = MILLIS_PER_MINUTE * 60;
+    public static long MILLIS_PER_DAY        = MILLIS_PER_HOUR   * 24;
+    public static long MILLIS_PER_YEAR       = MILLIS_PER_DAY    * 365;
 
     private static long[] startOfYear = new long[100];
 
@@ -47,8 +49,12 @@ public final class Time {
 
     Time(int year, int day, int hour, int minute, int second, int milliseconds) {
         index = year - 1970;
-        timeThisYear = day * MILLIS_PER_DAY + hour * MILLIS_PER_HOUR + minute * MILLIS_PER_MINUTE +
-            second * MILLIS_PER_SECOND + milliseconds;
+        timeThisYear =
+            day * MILLIS_PER_DAY +
+            hour * MILLIS_PER_HOUR +
+            minute * MILLIS_PER_MINUTE +
+            second * MILLIS_PER_SECOND +
+            milliseconds;
 
         t = startOfYear[index] + timeThisYear;
     }
@@ -91,4 +97,21 @@ public final class Time {
 
     public boolean after(Time that)  { return t > that.t; }
     public boolean before(Time that) { return t < that.t; }
+
+    public static Time closestTimeIn(Time target, Set<Time> times) {
+        System.out.println("Look for " + target + " in " + times);
+        Time best = null;
+        for (Time t : times) {
+            if (best==null || target.diff(t) < target.diff(best)) {
+                best = t;
+            }
+        }
+        System.out.println("Picked " + best);
+        return best;
+    }
+
+    @Override
+    public int compareTo(Time that) {
+        return Long.compare(t,that.t);
+    }
 }
