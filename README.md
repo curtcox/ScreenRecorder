@@ -34,5 +34,8 @@ The intent is to provide an open solution that can interoperate with things like
 - [Tesseract](https://github.com/tesseract-ocr/tesseract/blob/master/doc/tesseract.1.asc) [VNRecognizeTextRequest](https://developer.apple.com/documentation/vision/recognizing_text_in_images)
 - others
 
+The elephant in the room is security. A searchable trove of your data is obviously something you want to guard closely.
+Right now, I'm focused on making this project useful. If you have security suggestions, please file an issue.
+
 This code is ultimately a fork of the PNG writer, although you won't see much evidence of that at this point.
 See [here](https://github.com/curtcox/apng-writer/tree/delete_unneeded_stuff) for where it came from.
