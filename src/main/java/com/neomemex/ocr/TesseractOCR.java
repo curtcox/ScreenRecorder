@@ -8,6 +8,8 @@ package com.neomemex.ocr;
  * then
  *
  * cat imagefile | tesseract - -
+ *
+ * See https://github.com/tesseract-ocr/tesseract/blob/master/doc/tesseract.1.asc
  */
-public class TesseractOCR implements OCR {
+public final class TesseractOCR implements OCR {
 }
