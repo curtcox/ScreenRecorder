@@ -43,7 +43,7 @@ public final class Time implements Comparable<Time> {
         throw new IllegalArgumentException(t + " too big : expand table");
     }
 
-    Time(int year, int day, int hour, int minute) {
+    public Time(int year, int day, int hour, int minute) {
         this(year,day,hour,minute,0,0);
     }
 

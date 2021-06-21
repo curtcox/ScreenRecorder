@@ -1,5 +1,6 @@
-package com.neomemex.shared;
+package com.neomemex.store;
 
+import com.neomemex.shared.Time;
 import com.neomemex.store.FileTimeMap;
 import org.junit.Test;
 

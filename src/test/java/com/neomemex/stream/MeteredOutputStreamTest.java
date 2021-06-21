@@ -1,4 +1,4 @@
-package com.neomemex.recorder;
+package com.neomemex.stream;
 
 import org.junit.Test;
 

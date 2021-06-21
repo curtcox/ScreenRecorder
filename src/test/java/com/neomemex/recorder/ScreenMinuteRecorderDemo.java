@@ -1,6 +1,8 @@
 package com.neomemex.recorder;
 
 import com.neomemex.shared.Time;
+import com.neomemex.stream.MeteredOutputStream;
+import com.neomemex.stream.NullOutputStream;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.Deflater;
