@@ -60,5 +60,13 @@ public final class TimeCalculator {
     public double minute(Time time) { return fraction(time.minute(),60); }
     public double second(Time time) { return fraction(time.second(),60); }
 
+    public double[] years(Time[] times) {
+        double[] out = new double[times.length];
+        for (int i=0; i<times.length; i++) {
+            out[i] = year(times[i]);
+        }
+        return out;
+    }
+
     private static double fraction(int x, int max) { return (double) x / (double) max; }
 }

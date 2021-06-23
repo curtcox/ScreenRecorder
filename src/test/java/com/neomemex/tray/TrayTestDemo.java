@@ -18,7 +18,7 @@ public class TrayTestDemo {
     static class FakeDisplay implements Viewer.Display {
         @Override public void show() { JOptionPane.showMessageDialog(null, "Fake display"); }
         @Override public void setImage(BufferedImage image) {}
-        @Override public void setTime(Time t) {}
+        @Override public void setTime(Time t,Time[] times) {}
     }
 
     public static void main(String[] args) {

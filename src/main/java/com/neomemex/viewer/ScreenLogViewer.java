@@ -100,8 +100,9 @@ final class ScreenLogViewer implements Viewer.Display {
     }
 
     @Override
-    public void setTime(Time time) {
+    public void setTime(Time time,Time[] times) {
         actualTime.setTime(time);
+        years.setMarks(calculator.years(times));
     }
 
     void updateRequest(boolean full) {

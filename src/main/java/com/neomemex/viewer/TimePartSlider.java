@@ -7,6 +7,7 @@ import java.awt.*;
 
 final class TimePartSlider extends JPanel {
 
+    private double[] marks = new double[0];
     final int index;
     final JSlider slider = new JSlider();
     static final int MAX = 10000;
@@ -24,14 +25,20 @@ final class TimePartSlider extends JPanel {
         Graphics scratch = (g == null) ? null : g.create();
         try {
             scratch.setColor(Color.GREEN);
-            mark(g,getValue());
+            paintMarks(g);
         }
         finally {
             scratch.dispose();
         }
     }
 
-    private void mark(Graphics g,double at) {
+    private void paintMarks(Graphics g) {
+        for (double mark : marks) {
+            paintMark(g,mark);
+        }
+    }
+
+    private void paintMark(Graphics g,double at) {
         if (slider.getOrientation()==JSlider.HORIZONTAL) {
             int width = getWidth();
             int x = (int) (width * 0.91 * at + width * 0.05);
@@ -49,6 +56,10 @@ final class TimePartSlider extends JPanel {
 
     double getValue() {
         return ((double) slider.getValue()) / ((double) MAX);
+    }
+
+    void setMarks(double[] marks) {
+        this.marks = marks;
     }
 
     boolean getValueIsAdjusting()                   { return slider.getValueIsAdjusting(); }

@@ -54,12 +54,13 @@ final class SimpleImageRequestor implements Viewer.Requestor {
     }
 
     private void process(final Viewer.Request request) {
-        final Image image = retriever.request(request).image;
+        final Viewer.Response response = retriever.request(request);
+        final Image image = response.image;
         final BufferedImage bufferedImage = RasterDeserializer.image(image);
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                display.setTime(image.time);
+                display.setTime(image.time,response.times);
                 display.setImage(bufferedImage);
             }
         });

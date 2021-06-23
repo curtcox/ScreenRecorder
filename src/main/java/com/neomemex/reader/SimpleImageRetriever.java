@@ -5,7 +5,9 @@ import com.neomemex.shared.Time;
 import com.neomemex.store.TimeStreamMap;
 import com.neomemex.viewer.Viewer;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 public final class SimpleImageRetriever implements Viewer.Retriever {
@@ -21,9 +23,17 @@ public final class SimpleImageRetriever implements Viewer.Retriever {
         return new SimpleImageRetriever(map);
     }
 
+    private Time[] allTimes() {
+        Set<Time> all = new HashSet<>();
+        for (Map<Time,Image> map : cache.values()) {
+            all.addAll(map.keySet());
+        }
+        return all.toArray(new Time[0]);
+    }
+
     @Override
     public Viewer.Response request(Viewer.Request request) {
-        return new Viewer.Response(image(request.time));
+        return new Viewer.Response(image(request.time),allTimes());
     }
 
     private Image image(Time time) {
@@ -31,13 +41,10 @@ public final class SimpleImageRetriever implements Viewer.Retriever {
     }
 
     private Map<Time,Image> imageMap(Time time) {
-        if (cache.containsKey(time)) {
-            return cache.get(time);
-        } else {
-            Map<Time,Image> images = ImageSequenceReader.allImagesFrom(streams.input(time));
-            cache.put(time,images);
-            return images;
+        if (!cache.containsKey(time)) {
+            cache.put(time, ImageSequenceReader.allImagesFrom(streams.input(time)));
         }
+        return cache.get(time);
     }
 
     private Image closest(Map<Time,Image> images,Time target) {
