@@ -27,8 +27,7 @@ public final class SimpleImageRetriever implements Viewer.Retriever {
     }
 
     private Image image(Time time) {
-        Time nearest = streams.nearest(time);
-        return closest(imageMap(nearest),time);
+        return closest(imageMap(streams.nearest(time)),time);
     }
 
     private Map<Time,Image> imageMap(Time time) {

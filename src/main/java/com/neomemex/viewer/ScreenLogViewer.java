@@ -28,7 +28,6 @@ final class ScreenLogViewer implements Viewer.Display {
     final Listener listener = new Listener();
     final Viewer.Requestor requestor;
     final TimeCalculator calculator = new TimeCalculator();
-    private static final int MAX = 10000;
 
     // On change, update the request
     private class Listener implements ChangeListener, DocumentListener {
@@ -59,29 +58,6 @@ final class ScreenLogViewer implements Viewer.Display {
     }
 
     private static TimePartSlider slider(int index) { return new TimePartSlider(index); }
-    private static final class TimePartSlider extends JSlider {
-        final int index;
-        TimePartSlider(int index) {
-            this.index = index;
-            setMinimum(0);
-            setMaximum(MAX);
-        }
-    }
-
-    static class TimeLabel extends JLabel {
-        Time time;
-        TimeLabel() {
-            super("----/--- --:--:--");
-            setPreferredSize(new Dimension(130,20));
-            setFont(new Font( "Monospaced", Font.PLAIN, 12 ));
-        }
-        Time getTime() {return time;}
-        void setTime(Time time) {
-            this.time = time;
-            setText(time.toString());
-        }
-    }
-
 
     void setSize(int width,int height) {
         frame.setSize(width,height);
@@ -150,13 +126,12 @@ final class ScreenLogViewer implements Viewer.Display {
         set(seconds,calculator.second(time));
     }
 
-    private static double value(JSlider slider) {
-        return ((double) slider.getValue()) / ((double) MAX);
+    private static double value(TimePartSlider slider) {
+        return (slider.getValue());
     }
-
     private void set(TimePartSlider slider,double value) {
         if (slider!=lastTimePartChanged) {
-            slider.setValue((int) (MAX * value));
+            slider.setValue(value);
         }
     }
 

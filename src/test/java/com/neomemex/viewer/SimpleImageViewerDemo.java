@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 
 public class SimpleImageViewerDemo {
 
-    static final TimeStreamMap store = new MemoryTimeStreamMap();
+    static final TimeStreamMap            store = new MemoryTimeStreamMap();
     static final Viewer.Retriever     retriever = SimpleImageRetriever.of(store);
     static final ExecutorService       executor = Executors.newSingleThreadExecutor();
     static final SimpleImageRequestor requestor = new SimpleImageRequestor(retriever,executor);
