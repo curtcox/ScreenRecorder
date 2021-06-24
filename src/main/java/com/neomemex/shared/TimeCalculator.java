@@ -1,5 +1,8 @@
 package com.neomemex.shared;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class TimeCalculator {
 
     private final Time start;
@@ -64,6 +67,58 @@ public final class TimeCalculator {
         double[] out = new double[times.length];
         for (int i=0; i<times.length; i++) {
             out[i] = year(times[i]);
+        }
+        return out;
+    }
+
+    public double[] days(Time time, Time[] times) {
+        List<Double> out = new ArrayList<>();
+        int year = time.year();
+        for (Time t : times) {
+            if (t.year() == year) {
+                out.add(day(t));
+            }
+        }
+        return doubles(out);
+    }
+
+    public double[] hours(Time time, Time[] times) {
+        List<Double> out = new ArrayList<>();
+        int year = time.year(); int day = time.day();
+        for (Time t : times) {
+            if (t.year() == year && t.day() == day) {
+                out.add(hour(t));
+            }
+        }
+        return doubles(out);
+    }
+
+    public double[] minutes(Time time, Time[] times) {
+        List<Double> out = new ArrayList<>();
+        int year = time.year(); int day = time.day(); int hour = time.hour();
+        for (Time t : times) {
+            if (t.year() == year && t.day() == day && t.hour() == hour) {
+                out.add(minute(t));
+            }
+        }
+        return doubles(out);
+    }
+
+    public double[] seconds(Time time, Time[] times) {
+        List<Double> out = new ArrayList<>();
+        int year = time.year(); int day = time.day(); int hour = time.hour(); int minute = time.minute();
+        for (Time t : times) {
+            if (t.year() == year && t.day() == day && t.hour() == hour && t.minute() == minute) {
+                out.add(second(t));
+            }
+        }
+        return doubles(out);
+    }
+
+    private double[] doubles(List<Double> in) {
+        double[] out = new double[in.size()];
+        for (int i=0; i<in.size(); i++) {
+            out[i] = in.get(i);
         }
         return out;
     }

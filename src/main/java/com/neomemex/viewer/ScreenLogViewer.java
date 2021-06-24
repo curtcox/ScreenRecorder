@@ -15,6 +15,7 @@ import java.awt.image.BufferedImage;
 final class ScreenLogViewer implements Viewer.Display {
 
     private TimePartSlider lastTimePartChanged;
+    private Time[] times = new Time[0];
     final JFrame             frame = new JFrame("Viewer");
     final TimePartSlider     years = slider(0);
     final TimePartSlider      days = slider(1);
@@ -101,12 +102,13 @@ final class ScreenLogViewer implements Viewer.Display {
 
     @Override
     public void setTime(Time time,Time[] times) {
+        this.times = times;
         actualTime.setTime(time);
-        years.setMarks(calculator.years(times));
     }
 
     void updateRequest(boolean full) {
         Time time = fromSliders();
+        targetTime.setTime(time);
         updateTime(time);
         if (full) {
             requestor.request(new Viewer.Request(search.getText(),time));
@@ -119,13 +121,23 @@ final class ScreenLogViewer implements Viewer.Display {
     }
 
     private void updateTime(Time time) {
-        targetTime.setTime(time);
-        set(years,calculator.year(time));
-        set(days,calculator.day(time));
-        set(hours,calculator.hour(time));
-        set(minutes,calculator.minute(time));
-        set(seconds,calculator.second(time));
+        setYears(time);
+        setDays(time);
+        setHours(time);
+        setMinutes(time);
+        setSeconds(time);
+        years.setMarks(calculator.years(times));
+        days.setMarks(calculator.days(time,times));
+        hours.setMarks(calculator.hours(time,times));
+        minutes.setMarks(calculator.minutes(time,times));
+        seconds.setMarks(calculator.seconds(time,times));
     }
+
+    private void   setYears(Time time) { set(years,calculator.year(time)); }
+    private void    setDays(Time time) { set(days,calculator.day(time)); }
+    private void   setHours(Time time) { set(hours,calculator.hour(time)); }
+    private void setMinutes(Time time) { set(minutes,calculator.minute(time)); }
+    private void setSeconds(Time time) { set(seconds,calculator.second(time)); }
 
     private static double value(TimePartSlider slider) {
         return (slider.getValue());
