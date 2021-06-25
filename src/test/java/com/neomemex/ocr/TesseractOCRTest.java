@@ -3,6 +3,8 @@ package com.neomemex.ocr;
 import org.junit.Test;
 
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -17,8 +19,8 @@ public class TesseractOCRTest {
     }
 
     @Test
-    public void browserSample1() {
-        String text = ocr.process(input("/browserSample1.png"));
+    public void browserSample1_text() {
+        String text = ocr.text(input("/browserSample1.png"));
 
         assertContains(text,"OCR");
         assertContains(text,"github.com/tesseract-ocr/tesseract/blob/master/doc/tesseract.1.asc");
@@ -32,8 +34,16 @@ public class TesseractOCRTest {
     }
 
     @Test
-    public void terminalSample1() {
-        String text = ocr.process(input("/terminalSample1.png"));
+    public void browserSample1_words() {
+        OCR.Word[] words = ocr.words(input("/browserSample1.png"));
+        assertContains(words,new OCR.Word(123,521,128,19,"tesseract"));
+        assertContains(words,new OCR.Word(474,339,58,21,"OCR"));
+        assertContains(words,new OCR.Word(1618,700,87,27,"engine"));
+    }
+
+    @Test
+    public void terminalSample1_text() {
+        String text = ocr.text(input("/terminalSample1.png"));
 
         assertContains(text,"109x28");
         assertContains(text,"git gui &");
@@ -44,6 +54,10 @@ public class TesseractOCRTest {
 
     void assertContains(String full,String part) {
         assertTrue(full,full.contains(part));
+    }
+    void assertContains(OCR.Word[] words, OCR.Word word) {
+        List<OCR.Word> list = Arrays.asList(words);
+        assertTrue(list.toString(),list.contains(word));
     }
 
     InputStream input(String name) {

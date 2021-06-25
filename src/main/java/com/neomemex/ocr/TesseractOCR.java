@@ -4,6 +4,11 @@ import com.neomemex.store.RuntimeIOException;
 import com.neomemex.stream.NullOutputStream;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * A potential simple way of doing OCR is via tesseract.
@@ -18,9 +23,9 @@ import java.io.*;
  */
 public final class TesseractOCR implements OCR {
 
-    public String process(InputStream input) {
+    public String text(InputStream input) {
         try {
-            return process0(input);
+            return text0(input);
         } catch (IOException e) {
             throw new RuntimeIOException(e);
         } catch (InterruptedException e) {
@@ -28,10 +33,23 @@ public final class TesseractOCR implements OCR {
         }
     }
 
-    private String process0(InputStream input) throws IOException, InterruptedException {
+    public Word[] words(InputStream input) {
+        try {
+            return words0(input);
+        } catch (IOException e) {
+            throw new RuntimeIOException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String text0(InputStream input) throws IOException, InterruptedException {
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command("tesseract", "-", "-");
-        Process process = processBuilder.start();
+        return process(processBuilder.start(),input);
+    }
+
+    private String process(Process process, InputStream input) throws IOException, InterruptedException {
         OutputStream in = process.getOutputStream();
         copy(input,in);
         in.close();
@@ -41,6 +59,47 @@ public final class TesseractOCR implements OCR {
         int exitCode = process.waitFor();
         System.out.println("Exited with " + exitCode);
         return new String(out.toByteArray());
+    }
+
+    private Word[] words0(InputStream input) throws IOException, InterruptedException {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command("tesseract", "-", "-", "tsv");
+        String output = process(processBuilder.start(),input);
+        return words(lines(output));
+    }
+
+    private String[] lines(String text) {
+        return text.split("\n");
+    }
+
+    private Word[] words(String[] lines) {
+        List<Word> out = new ArrayList<>();
+        for (String line : lines) {
+            if (validWord(line)){
+                out.add(word(line));
+            }
+        }
+        return out.toArray(new Word[out.size()]);
+    }
+
+    private boolean validWord(String line) {
+        return !header(line) && line.split("\t").length == 12;
+    }
+
+    private boolean header(String line) {
+        return line.startsWith("level");
+    }
+
+    //5	1	3	1	1	4	474	339	58	21	96	OCR
+    private Word word(String line) {
+        String[] parts = line.split("\t");
+        System.out.println(Arrays.asList(parts));
+        int left = parseInt(parts[6]);
+        int top = parseInt(parts[7]);
+        int width = parseInt(parts[8]);
+        int height = parseInt(parts[9]);
+        String text = parts[11];
+        return new Word(left,top,width,height,text);
     }
 
     // buffer size used for reading and writing

@@ -8,7 +8,8 @@ import java.io.InputStream;
  * See https://github.com/curtcox/macOCR
  */
 public final class VNRecognizeTextRequestOCR implements OCR {
-    public String process(InputStream input) {
+    @Override public String text(InputStream input) {
         return null;
     }
+    @Override public Word[] words(InputStream input) { return null; }
 }
