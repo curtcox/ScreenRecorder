@@ -1,5 +1,6 @@
 package com.neomemex.viewer;
 
+import com.neomemex.shared.Highlight;
 import com.neomemex.shared.Image;
 import com.neomemex.shared.Time;
 
@@ -11,6 +12,7 @@ public interface Viewer {
     interface Display {
         void show();
         void setTime(Time time,Time[] times);
+        void setHighlight(Highlight highlight);
         void setImage(BufferedImage image); // UI -- Invokers must always be on the EDT.
     }
 
@@ -39,10 +41,11 @@ public interface Viewer {
 
     final class Response {
 
-        final Image image; final Time[] times;
+        final Image image; final Highlight highlight; final Time[] times;
 
-        public Response(Image image,Time[] times) {
+        public Response(Image image,Highlight highlight, Time[] times) {
             this.image = image;
+            this.highlight = highlight;
             this.times = times;
         }
     }

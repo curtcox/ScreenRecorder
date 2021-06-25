@@ -1,10 +1,12 @@
 package com.neomemex.viewer;
 
 import com.neomemex.shared.Screen;
+import com.neomemex.shared.Time;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.*;
 
 public class ScreenLogViewerDemo {
 
@@ -13,13 +15,17 @@ public class ScreenLogViewerDemo {
         double scale = 0.75;
         int width = (int) (image.getWidth() * scale);
         int height = (int) (image.getHeight() * scale);
+        final ArrayList<Time> times = new ArrayList<>();
 
         // Breaks the threading rules, in addition to being fake
         class FakeImageRequestor implements Viewer.Requestor {
             Viewer.Display display;
             @Override public void request(Viewer.Request request) {
                 System.out.println(request);
+                Time time = request.time;
+                times.add(time);
                 display.setImage(Screen.shot());
+                display.setTime(time,times.toArray(new Time[times.size()]));
             }
         }
 

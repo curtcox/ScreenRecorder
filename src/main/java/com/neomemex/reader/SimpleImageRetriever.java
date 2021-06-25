@@ -1,5 +1,6 @@
 package com.neomemex.reader;
 
+import com.neomemex.shared.Highlight;
 import com.neomemex.shared.Image;
 import com.neomemex.shared.Time;
 import com.neomemex.store.TimeStreamMap;
@@ -33,11 +34,15 @@ public final class SimpleImageRetriever implements Viewer.Retriever {
 
     @Override
     public Viewer.Response request(Viewer.Request request) {
-        return new Viewer.Response(image(request.time),allTimes());
+        return new Viewer.Response(image(request.time),highlight(request.time),allTimes());
     }
 
     private Image image(Time time) {
         return closest(imageMap(streams.nearest(time)),time);
+    }
+
+    private Highlight highlight(Time time) {
+        return Highlight.none;
     }
 
     private Map<Time,Image> imageMap(Time time) {

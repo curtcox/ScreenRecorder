@@ -1,5 +1,6 @@
 package com.neomemex.viewer;
 
+import com.neomemex.shared.Highlight;
 import com.neomemex.shared.Time;
 import com.neomemex.shared.TimeCalculator;
 
@@ -14,8 +15,6 @@ import java.awt.image.BufferedImage;
 // EDT only
 final class ScreenLogViewer implements Viewer.Display {
 
-    private TimePartSlider lastTimePartChanged;
-    private Time[] times = new Time[0];
     final JFrame             frame = new JFrame("Viewer");
     final TimePartSlider     years = slider(0);
     final TimePartSlider      days = slider(1);
@@ -29,6 +28,8 @@ final class ScreenLogViewer implements Viewer.Display {
     final Listener listener = new Listener();
     final Viewer.Requestor requestor;
     final TimeCalculator calculator = new TimeCalculator();
+    private TimePartSlider lastTimePartChanged;
+    private Time[] times = new Time[0];
 
     // On change, update the request
     private class Listener implements ChangeListener, DocumentListener {
@@ -101,6 +102,10 @@ final class ScreenLogViewer implements Viewer.Display {
     }
 
     @Override
+    public void setHighlight(Highlight highlight) {
+    }
+
+    @Override
     public void setTime(Time time,Time[] times) {
         this.times = times;
         actualTime.setTime(time);
@@ -117,7 +122,8 @@ final class ScreenLogViewer implements Viewer.Display {
 
     private Time fromSliders() {
         double[] parts = new double[] {value(years),value(days),value(hours),value(minutes),value(seconds)};
-        return calculator.timeFrom(targetTime.getTime(),parts,lastTimePartChanged.index);
+        int focus = lastTimePartChanged == null ? 0 : lastTimePartChanged.index;
+        return calculator.timeFrom(targetTime.getTime(),parts,focus);
     }
 
     private void updateTime(Time time) {

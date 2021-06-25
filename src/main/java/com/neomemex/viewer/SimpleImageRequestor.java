@@ -61,6 +61,7 @@ final class SimpleImageRequestor implements Viewer.Requestor {
             @Override
             public void run() {
                 display.setTime(image.time,response.times);
+                display.setHighlight(response.highlight);
                 display.setImage(bufferedImage);
             }
         });
