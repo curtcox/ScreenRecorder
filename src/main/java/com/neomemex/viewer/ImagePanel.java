@@ -7,24 +7,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class ImagePanel extends JPanel
-{
-    OCR.Word[] words;
-    final JLabel label = new JLabel();
+public class ImagePanel extends JPanel {
 
-    ImagePanel() {
-        super(new GridLayout(1,1));
-        add(label);
-    }
+    private OCR.Word[] words;
+    private BufferedImage image;
 
     public void setImage(BufferedImage image) {
-        label.setIcon(new ImageIcon(image.getScaledInstance(image.getWidth(),image.getHeight(),16)));
+        this.image = image;
     }
 
     public void setWords(OCR.Word[] words) {
         this.words = words;
-        System.out.println(words.length + " words");
-        this.repaint();
     }
 
     public void setHighlight(Highlight highlight) {
@@ -33,10 +26,14 @@ public class ImagePanel extends JPanel
     @Override
     public void paint(Graphics g) {
         super.paint(g);
+        paintImage((Graphics2D) g);
         paintWordBoxes(g);
-//        paintBorder(g);
-//        paintComponent(g);
-//        paintChildren(g);
+    }
+
+    private void paintImage(Graphics2D g) {
+        if (image!=null) {
+            g.drawImage(image,null,null);
+        }
     }
 
     private void paintWordBoxes(Graphics g) {
