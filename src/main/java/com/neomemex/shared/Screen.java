@@ -15,6 +15,16 @@ public final class Screen {
         }
     }
 
+    /**
+     * The returned screenshot is OK, but blurry on my dev Mac.
+     * It appears to vary based on OS and JRE.
+     * Using the MultiResolutionImage API introduced in Java 9 fared no better on my machine.
+     * Possible futures:
+     * a) The screencapture command is nice and crisp. Perhaps it can be sent to standard out via the clipboard.
+     * b) Native robot peers
+     * c) JNA
+     * https://bugs.openjdk.java.net/browse/JDK-8207386
+     */
     public static BufferedImage shot() {
         return robot.createScreenCapture(new Rectangle(size()));
     }
