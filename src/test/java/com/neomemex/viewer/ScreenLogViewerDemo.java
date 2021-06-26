@@ -1,5 +1,7 @@
 package com.neomemex.viewer;
 
+import com.neomemex.ocr.OCR;
+import com.neomemex.ocr.TesseractOCR;
 import com.neomemex.shared.Screen;
 import com.neomemex.shared.Time;
 
@@ -15,6 +17,7 @@ public class ScreenLogViewerDemo {
         double scale = 0.75;
         int width = (int) (image.getWidth() * scale);
         int height = (int) (image.getHeight() * scale);
+        final OCR ocr = TesseractOCR.instance;
         final ArrayList<Time> times = new ArrayList<>();
 
         // Breaks the threading rules, in addition to being fake
@@ -24,7 +27,9 @@ public class ScreenLogViewerDemo {
                 System.out.println(request);
                 Time time = request.time;
                 times.add(time);
-                display.setImage(Screen.shot());
+                BufferedImage bufferedImage = Screen.shot();
+                display.setImage(bufferedImage);
+                display.setWords(ocr.words(bufferedImage));
                 display.setTime(time,times.toArray(new Time[times.size()]));
             }
         }

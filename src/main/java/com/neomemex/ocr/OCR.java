@@ -1,5 +1,6 @@
 package com.neomemex.ocr;
 
+import java.awt.image.BufferedImage;
 import java.io.InputStream;
 
 /**
@@ -36,5 +37,6 @@ public interface OCR {
 
     String text(InputStream input);
     Word[] words(InputStream input);
+    Word[] words(BufferedImage image);
 
 }

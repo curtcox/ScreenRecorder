@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
 public final class RasterSerializer {
 
     private final Dimension dim;
-    private final int numBands = Consts.bands;
+    private final int numBands = 3;
     private final int[] dataElements;
 
     private RasterSerializer(BufferedImage image) {

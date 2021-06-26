@@ -1,5 +1,6 @@
 package com.neomemex.viewer;
 
+import com.neomemex.ocr.OCR;
 import com.neomemex.shared.Highlight;
 import com.neomemex.shared.Time;
 import com.neomemex.shared.TimeCalculator;
@@ -22,7 +23,7 @@ final class ScreenLogViewer implements Viewer.Display {
     final TimePartSlider   minutes = slider(3);
     final TimePartSlider   seconds = slider(4);
     final JTextField search = new JTextField();
-    final JLabel imageLabel = new JLabel();
+    final ImagePanel imagePanel = new ImagePanel();
     final TimeLabel targetTime = new TimeLabel();
     final TimeLabel actualTime = new TimeLabel();
     final Listener listener = new Listener();
@@ -70,7 +71,7 @@ final class ScreenLogViewer implements Viewer.Display {
         years.setOrientation(JSlider.VERTICAL);
         days.setOrientation(JSlider.VERTICAL);
         frame.setLayout(new BorderLayout());
-        frame.add(imageLabel,BorderLayout.CENTER);
+        frame.add(imagePanel,BorderLayout.CENTER);
         frame.add(search,BorderLayout.NORTH);
         JPanel west = new JPanel(new GridLayout(2,0));
         west.add(years);
@@ -98,17 +99,23 @@ final class ScreenLogViewer implements Viewer.Display {
 
     @Override
     public void setImage(BufferedImage image) {
-        imageLabel.setIcon(new ImageIcon(image.getScaledInstance(image.getWidth(),image.getHeight(),16)));
+        imagePanel.setImage(image);
     }
 
     @Override
     public void setHighlight(Highlight highlight) {
+        imagePanel.setHighlight(highlight);
     }
 
     @Override
     public void setTime(Time time,Time[] times) {
         this.times = times;
         actualTime.setTime(time);
+    }
+
+    @Override
+    public void setWords(OCR.Word[] words) {
+        imagePanel.setWords(words);
     }
 
     void updateRequest(boolean full) {

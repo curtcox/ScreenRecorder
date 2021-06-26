@@ -1,4 +1,4 @@
-package com.neomemex.recorder;
+package com.neomemex.png;
 
 import java.nio.ByteBuffer;
 

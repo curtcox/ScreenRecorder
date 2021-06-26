@@ -1,5 +1,6 @@
 package com.neomemex.viewer;
 
+import com.neomemex.ocr.OCR;
 import com.neomemex.shared.Highlight;
 import com.neomemex.shared.Image;
 import com.neomemex.shared.Time;
@@ -12,6 +13,7 @@ public interface Viewer {
     interface Display {
         void show();
         void setTime(Time time,Time[] times);
+        void setWords(OCR.Word[] words);
         void setHighlight(Highlight highlight);
         void setImage(BufferedImage image); // UI -- Invokers must always be on the EDT.
     }

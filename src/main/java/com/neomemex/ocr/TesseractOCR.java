@@ -1,8 +1,10 @@
 package com.neomemex.ocr;
 
+import com.neomemex.png.PngSequenceWriter;
 import com.neomemex.store.RuntimeIOException;
 import com.neomemex.stream.NullOutputStream;
 
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +25,8 @@ import static java.lang.Integer.parseInt;
  */
 public final class TesseractOCR implements OCR {
 
+    public static OCR instance = new TesseractOCR();
+
     public String text(InputStream input) {
         try {
             return text0(input);
@@ -41,6 +45,15 @@ public final class TesseractOCR implements OCR {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Word[] words(BufferedImage image) {
+        return words(new ByteArrayInputStream(bytes(image)));
+    }
+
+    public static byte[] bytes(BufferedImage image) {
+        return PngSequenceWriter.bytes(image);
     }
 
     private String text0(InputStream input) throws IOException, InterruptedException {

@@ -1,4 +1,4 @@
-package com.neomemex.recorder;
+package com.neomemex.png;
 
 final class Consts {
 

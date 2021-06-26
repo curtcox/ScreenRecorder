@@ -1,46 +1,65 @@
-package com.neomemex.recorder;
+package com.neomemex.png;
 
+import com.neomemex.recorder.ImageSequenceWriter;
 import com.neomemex.shared.Time;
+import com.neomemex.store.RuntimeIOException;
 
 import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
 import java.nio.*;
-import java.nio.channels.ByteChannel;
+import java.nio.channels.WritableByteChannel;
 import java.util.zip.CRC32;
 
-final class PngSequenceWriter
+public final class PngSequenceWriter
     implements ImageSequenceWriter
 {
 
     private int frameCount = 0;
     private int sequenceNumber;
-    private boolean closed = false;
 
     private final Filter filter;
     private final int max;
-    private final ByteChannel out;
+    private final WritableByteChannel out;
     private static final int fpsNum = 1;
     private static final int fpsDen = 10;
 
-    public PngSequenceWriter(File f, Filter filter, int max) throws FileNotFoundException {
+    PngSequenceWriter(WritableByteChannel out, Filter filter, int max) {
+        this.out = out;
         this.filter = filter;
         this.max = max;
-        out = new RandomAccessFile(f, "rw").getChannel();
     }
 
-    private void ensureOpen() throws IOException {
-        if (closed) {
-            throw new IOException("Stream closed");
+    static PngSequenceWriter of(File f, Filter filter, int max) throws FileNotFoundException {
+        return new PngSequenceWriter(new RandomAccessFile(f, "rw").getChannel(),filter,max);
+    }
+
+    public static byte[] bytes(BufferedImage image) {
+        try {
+            return bytes0(image);
+        } catch (IOException e) {
+            throw new RuntimeIOException(e);
         }
+    }
+
+    private static byte[] bytes0(BufferedImage image) throws IOException {
+        int w = image.getWidth();
+        int h = image.getHeight();
+        int capacity = w * h * 4;
+        System.out.println("Capacity = " + capacity + " " + w + "x" + h);
+        WritableByteBufferChannel out = new WritableByteBufferChannel(capacity);
+        Filter filter = new FilterNone(w,h);
+        PngSequenceWriter writer = new PngSequenceWriter(out,filter,1);
+        writer.writeImage(image,Time.now());
+        writer.close();
+        return out.asBytes();
     }
 
     public void writeImage(BufferedImage img, Time time) {
         try {
-            ensureOpen();
             writeImage(img, fpsNum, fpsDen);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeIOException(e);
         }
     }
 
@@ -164,8 +183,6 @@ final class PngSequenceWriter
     }
 
     private void writeImage(BufferedImage img, int fpsNum, int fpsDen) throws IOException {
-        ensureOpen();
-
         if (frameCount == 0) {
             writeImageHeader(img);
         }
@@ -196,7 +213,6 @@ final class PngSequenceWriter
         //IEND
         out.write(ByteBuffer.wrap(Consts.getIENDArr()));
 
-        closed = true;
         frameCount = 0;
         out.close();
     }

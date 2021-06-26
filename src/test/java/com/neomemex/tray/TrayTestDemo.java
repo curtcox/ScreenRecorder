@@ -1,5 +1,6 @@
 package com.neomemex.tray;
 
+import com.neomemex.ocr.OCR;
 import com.neomemex.recorder.Recorder;
 import com.neomemex.shared.Highlight;
 import com.neomemex.shared.Time;
@@ -21,6 +22,7 @@ public class TrayTestDemo {
         @Override public void setImage(BufferedImage image) {}
         @Override public void setHighlight(Highlight highlight) {}
         @Override public void setTime(Time t,Time[] times) {}
+        @Override public void setWords(OCR.Word[] words) {}
     }
 
     public static void main(String[] args) {

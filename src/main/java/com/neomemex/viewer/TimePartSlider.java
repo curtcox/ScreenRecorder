@@ -5,6 +5,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 
+/**
+ * Like a JSlider, but with support for arbitrary custom tick marks.
+ */
 final class TimePartSlider extends JPanel {
 
     private double[] marks = new double[0];

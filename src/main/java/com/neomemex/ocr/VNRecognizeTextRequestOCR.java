@@ -1,5 +1,6 @@
 package com.neomemex.ocr;
 
+import java.awt.image.BufferedImage;
 import java.io.InputStream;
 
 /**
@@ -12,4 +13,5 @@ public final class VNRecognizeTextRequestOCR implements OCR {
         return null;
     }
     @Override public Word[] words(InputStream input) { return null; }
+    @Override public Word[] words(BufferedImage image) { return null; }
 }

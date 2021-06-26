@@ -1,5 +1,6 @@
 package com.neomemex.ocr;
 
+import com.neomemex.shared.Screen;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -50,6 +51,12 @@ public class TesseractOCRTest {
         assertContains(text,"Error: Cask 'araxis-merge' definition is invalid: invalid 'depends_on macos' value: unknown or unsupported");
         assertContains(text,"Upgrading 11 outdated packages");
         assertContains(text,"ScreenRecorder");
+    }
+
+    @Test
+    public void there_are_always_words_on_the_screen() {
+        OCR.Word[] words = ocr.words(Screen.shot());
+        assertTrue(words.length > 10);
     }
 
     void assertContains(String full,String part) {

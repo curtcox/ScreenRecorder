@@ -1,4 +1,6 @@
-package com.neomemex.recorder;
+package com.neomemex.png;
+
+import com.neomemex.recorder.RasterSerializer;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -20,7 +22,7 @@ final class PngImageEncoder {
         return new Dimension(image.getWidth(), image.getHeight());
     }
 
-    ByteBuffer encode() {
+    public ByteBuffer encode() {
         ByteBuffer result = ByteBuffer.allocate(bufferSize());
         filter.encode(pixelBytes, result);
         result.position(0);
