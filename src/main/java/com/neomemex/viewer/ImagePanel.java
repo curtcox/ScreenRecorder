@@ -7,7 +7,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class ImagePanel extends JPanel {
+/**
+ * For displaying previously captured images.
+ * In addition to the image, the panel has a notion of what words are within the image and where they are.
+ * My current effort is to enable copy and paste of those words. Two potential ways of doing this both seem hard.
+ * - directly adding the required support to the component
+ * - forcing a JTextComponent with text to lay it out in a way that matches the given words
+ */
+final class ImagePanel extends JPanel {
 
     private OCR.Word[] words;
     private BufferedImage image;
