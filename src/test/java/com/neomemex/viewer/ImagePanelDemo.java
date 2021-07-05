@@ -12,7 +12,7 @@ public class ImagePanelDemo {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                ImagePanel panel = new ImagePanel();
+                ImagePanel panel = ImagePanel.of();
                 panel.setImage(image);
                 panel.setWords(TesseractOCR.instance.words(image));
                 demo.frame.add(panel);

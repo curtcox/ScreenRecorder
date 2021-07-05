@@ -23,7 +23,7 @@ final class ScreenLogViewer implements Viewer.Display {
     final TimePartSlider   minutes = slider(3);
     final TimePartSlider   seconds = slider(4);
     final JTextField search = new JTextField();
-    final ImagePanel imagePanel = new ImagePanel();
+    final ImagePanel imagePanel = ImagePanel.of();
     final TimeLabel targetTime = new TimeLabel();
     final TimeLabel actualTime = new TimeLabel();
     final Listener listener = new Listener();

@@ -1,6 +1,5 @@
 package com.neomemex;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.Callable;
