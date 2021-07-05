@@ -11,7 +11,7 @@ public interface OCR {
         public final int left; public final int top;
         public final int width; public final int height;
         public final String	text;
-        Word(int left, int top, int width, int height, String text) {
+        public Word(int left, int top, int width, int height, String text) {
             this.left = left;
             this.top = top;
             this.width = width;
