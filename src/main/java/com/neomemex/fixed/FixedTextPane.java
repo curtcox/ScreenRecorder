@@ -24,7 +24,7 @@ public final class FixedTextPane
 
     public static FixedTextPane of(int width, int height, OCR.Word[] words) {
         FixedTextPane pane = new FixedTextPane(width,height,words);
-        pane.setEditorKit(new FixedEditorKit(Screen.width(),Screen.height(),words));
+        pane.setEditorKit(new FixedEditorKit(pane,Screen.width(),Screen.height(),words));
         pane.setEditable(false);
         return pane;
     }

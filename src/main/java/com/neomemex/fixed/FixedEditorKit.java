@@ -9,8 +9,10 @@ final class FixedEditorKit extends DefaultEditorKit {
     final int width;
     final int height;
     final OCR.Word[] words;
+    final FixedTextPane pane;
 
-    FixedEditorKit(int width, int height,OCR.Word[] words) {
+    FixedEditorKit(FixedTextPane pane,int width, int height,OCR.Word[] words) {
+        this.pane = pane;
         this.width = width;
         this.height = height;
         this.words = words;
@@ -19,7 +21,9 @@ final class FixedEditorKit extends DefaultEditorKit {
     public ViewFactory getViewFactory() {
         return new ViewFactory() {
             @Override public View create(Element elem) {
-                return new FixedView(elem,width,height,words);
+                FixedView view = new FixedView(elem,width,height,words);
+                pane.addCaretListener(view);
+                return  view;
             }
         };
     }
