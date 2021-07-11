@@ -16,6 +16,7 @@ final class FixedView extends View
     final int height;
     final OCR.Word[] words;
     final int[] starts;
+    private CaretEvent caretEvent;
 
     FixedView(Element elem, int width, int height, OCR.Word[] words) {
         super(elem);
@@ -43,19 +44,48 @@ final class FixedView extends View
 
     @Override
     public void paint(Graphics g, Shape allocation) {
-        for (OCR.Word word : words) {
-            paintWord(g,word);
+        for (int i=0; i<words.length; i++) {
+            OCR.Word word = words[i];
+            if (isSelected(i)) {
+                paintSelectedWord(g,word);
+            } else {
+                paintUnselectedWord(g,word);
+            }
         }
     }
 
-    private void paintWord(Graphics g, OCR.Word word) {
+    private boolean isSelected(int i) {
+        if (caretEvent==null) {
+            return false;
+        }
+        int start = starts[i];
+        return isBetween(caretEvent.getMark(),start,caretEvent.getDot());
+    }
+
+    private static boolean isBetween(int e1, int m, int e2) {
+        return (e1 <= m && m <= e2) || (e2 >= m && m >= e2);
+    }
+
+    private void paintUnselectedWord(Graphics g, OCR.Word word) {
+        int left = word.left;
+        int top = word.top;
+        int bottom = word.top + word.height;
+        int w = word.width;
+        int h = word.height;
+        g.setColor(Color.WHITE);
+        g.fillRect(left,top,w,h);
+        g.setColor(Color.RED);
+        g.drawString(word.text,left,bottom);
+    }
+
+    private void paintSelectedWord(Graphics g, OCR.Word word) {
         int left = word.left;
         int top = word.top;
         int bottom = word.top + word.height;
         int w = word.width;
         int h = word.height;
         g.setColor(Color.BLUE);
-        g.drawRect(left,top,w,h);
+        g.fillRect(left,top,w,h);
         g.setColor(Color.RED);
         g.drawString(word.text,left,bottom);
     }
@@ -116,7 +146,12 @@ final class FixedView extends View
      */
     @Override
     public int viewToModel(float x, float y, Shape a, Position.Bias[] biasReturn) {
-        System.out.println("viewToModel " + x + " " + y + " " + Arrays.asList(biasReturn));
+        int location = viewToModel0(x,y,a,biasReturn);
+        System.out.println("viewToModel " + x + " " + y + " " + Arrays.asList(biasReturn)+ "->" + location);
+        return location;
+    }
+
+    private int viewToModel0(float x, float y, Shape a, Position.Bias[] biasReturn) {
         biasReturn[0] = Position.Bias.Forward;
         for (int i=0; i< words.length; i++) {
             OCR.Word word = words[i];
@@ -135,5 +170,6 @@ final class FixedView extends View
     @Override
     public void caretUpdate(CaretEvent e) {
         System.out.println("caretUpdate " + e);
+        this.caretEvent = e;
     }
 }

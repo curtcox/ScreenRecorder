@@ -20,10 +20,10 @@ final class FixedTextPaneDemo extends JFrame {
 
     public static void main(String[] args) throws BadLocationException {
         new FixedTextPaneDemo(new OCR.Word[] {
-                new OCR.Word(0,0,100,100,"(0,0)"),
-                new OCR.Word(100,100,100,100,"(100,100)"),
-                new OCR.Word(200,200,100,100,"(200,200)"),
-                new OCR.Word(400,400,100,100,"(400,400)"),
+                new OCR.Word(0,0,100,50,"(0,0)"),
+                new OCR.Word(100,100,100,50,"(100,100)"),
+                new OCR.Word(200,200,100,50,"(200,200)"),
+                new OCR.Word(400,400,100,50,"(400,400)"),
         }).setVisible(true);
     }
 

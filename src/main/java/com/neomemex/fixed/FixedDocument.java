@@ -53,9 +53,12 @@ final class FixedDocument implements Document {
         return text.substring(offset,length);
     }
 
+    @Override public void getText(int offset, int length, Segment txt) {
+        throw no();
+    }
 
     // Methods that we implement to the extent that we don't blow up
-    @Override public Element getDefaultRootElement() { return new FixedElement(); }
+    @Override public Element getDefaultRootElement() { return FixedElement.of(this); }
 
     @Override
     public void addDocumentListener(DocumentListener listener) {
@@ -84,7 +87,6 @@ final class FixedDocument implements Document {
     @Override public void removeUndoableEditListener(UndoableEditListener listener) { throw no(); }
     @Override public void remove(int offs, int len)  { throw no(); }
     @Override public void insertString(int offset, String str, AttributeSet a)  { throw no(); }
-    @Override public void getText(int offset, int length, Segment txt) { throw no(); }
     @Override public Position getStartPosition() { throw no(); }
     @Override public Position getEndPosition() { throw no(); }
 
