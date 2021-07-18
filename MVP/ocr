@@ -1,0 +1,12 @@
+#!/usr/bin/env groovy
+
+def isScreenShot(String name) {  name.startsWith("Screen Shot") && name.endsWith("png")  }
+def date(String name) { name.substring(12,22) }
+def time(String name) { name.split('at')[1].split('M')[0] }
+
+for (f in new File(System.properties['user.home']+'/recordings').listFiles()) {
+    String name = f.name
+    if (isScreenShot(name)) {
+        println(date(name) + "    " + time(name))
+    }
+}
