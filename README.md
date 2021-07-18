@@ -11,6 +11,8 @@ The comparison to animated PNG is only for those generated using the code in thi
 The PNG spec contains all sorts of optional techniques that could potentially reduce file sizes.
 I don't know how much effort they are to implement or how much impact they have.
 
+## Goals
+
 The ultimate goal of this project is to produce a toolchain allowing people to search their past activities.
 This consists of several related steps. The goals are to eventually implement all of the parts and provide
 mechanisms for interoperation so that other tools can also be used to perform the same tasks.
@@ -34,8 +36,15 @@ The intent is to provide an open solution that can interoperate with things like
 - [Tesseract](https://github.com/tesseract-ocr/tesseract/blob/master/doc/tesseract.1.asc) [VNRecognizeTextRequest](https://developer.apple.com/documentation/vision/recognizing_text_in_images)
 - others
 
+## Security
+
 The elephant in the room is security. A searchable trove of your data is obviously something you want to guard closely.
 Right now, I'm focused on making this project useful. If you have security suggestions, please file an issue.
 
+## MVP
+[This directory](MVP/README.md) has some hastily written shell scripts that you can
+use on a Mac.
+
+## See Also
 This code is ultimately a fork of the PNG writer, although you won't see much evidence of that at this point.
 See [here](https://github.com/curtcox/apng-writer/tree/delete_unneeded_stuff) for where it came from.
