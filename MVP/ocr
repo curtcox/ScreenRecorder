@@ -1,12 +1,43 @@
 #!/usr/bin/env groovy
+import java.util.regex.*
 
-def isScreenShot(String name) {  name.startsWith("Screen Shot") && name.endsWith("png")  }
-def date(String name) { name.substring(12,22) }
-def time(String name) { name.split('at')[1].split('M')[0] }
+String home() { System.properties['user.home'] }
+String recordings() { home() +'/recordings' }
+boolean isScreenShot(String name) {  name.startsWith("Screen Shot") && name.endsWith("png")  }
+String date(String name) {
+    name.substring(12,22)
+}
+String time(String name) { name.split('at')[1].split('M')[0] }
+String dir(String name) {
+    String[] d = date(name).split("-")
+    String[] t = time(name).split(Pattern.quote("."))
+    recordings() + '/' + d[0] + '/' + d[1] + '/' + d[2] + '/' + t[0].trim()
+}
+String timeString(String name) {
+    name.substring(12,name.length()-4).replace(' ','_').replace('_at_','_')
+}
+void ensureDirectoryExists(String name) { new File(dir(name)).mkdirs() }
 
-for (f in new File(System.properties['user.home']+'/recordings').listFiles()) {
+void ocr(String name) {
+    String file = recordings() + '/' + name
+    String outputbase = dir(name) + '/' + timeString(name)
+    String command = "tesseract $file $outputbase"
+    println command
+    Process proc = new ProcessBuilder("tesseract",file,outputbase).start()
+    def outputStream = new StringBuffer()
+    proc.waitForProcessOutput(outputStream, System.err)
+    println outputStream
+}
+
+void move(String name) {
+
+}
+
+for (f in new File(recordings()).listFiles()) {
     String name = f.name
     if (isScreenShot(name)) {
-        println(date(name) + "    " + time(name))
+        ensureDirectoryExists(name)
+        ocr(name)
+        move(name)
     }
 }
