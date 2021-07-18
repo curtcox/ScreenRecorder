@@ -16,21 +16,22 @@ String dir(String name) {
 String timeString(String name) {
     name.substring(12,name.length()-4).replace(' ','_').replace('_at_','_')
 }
+String screenshot(String name) { recordings() + '/' + name }
+String outputbase(String name) { dir(name) + '/' + timeString(name) }
 void ensureDirectoryExists(String name) { new File(dir(name)).mkdirs() }
-
-void ocr(String name) {
-    String file = recordings() + '/' + name
-    String outputbase = dir(name) + '/' + timeString(name)
-    String command = "tesseract $file $outputbase"
-    println command
-    Process proc = new ProcessBuilder("tesseract",file,outputbase).start()
+void exec(String command,String arg1,String arg2) {
+    Process proc = new ProcessBuilder(command,arg1,arg2).start()
     def outputStream = new StringBuffer()
     proc.waitForProcessOutput(outputStream, System.err)
     println outputStream
 }
 
-void move(String name) {
+void ocr(String name) {
+    exec("tesseract",screenshot(name),outputbase(name))
+}
 
+void move(String name) {
+    exec("mv",screenshot(name),outputbase(name + '.png'))
 }
 
 for (f in new File(recordings()).listFiles()) {
