@@ -1,5 +1,4 @@
 #!/usr/bin/env groovy
-import java.util.function.Consumer
 import java.util.regex.*
 import groovy.transform.*
 
@@ -49,7 +48,9 @@ class T { // T as in Time, because an instance corresponds to different aspects 
 
     void ocr()  { exec("tesseract",outputbase()) }
     void move() { exec("mv",outputbase(name + '.png')) }
-    static Set<String> wordsIn(File file) { new TreeSet(Arrays.asList(file.text.split("[\\p{Punct}\\s]+"))) }
+    static String scrub(String s) { s.toLowerCase() }
+    static List<String> wordsFrom(File file) { Arrays.asList(file.text.split("[\\p{Punct}\\s]+")).collect { scrub(it)} }
+    static Set<String> wordsIn(File file) { new TreeSet(wordsFrom(file)) }
     static void writeTo(Set<String> words,File outFile) {
         outFile.withWriter{ out ->
             words.each {out.println it}
