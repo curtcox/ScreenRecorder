@@ -1,10 +1,10 @@
 #!/usr/bin/env groovy
-
+import java.util.function.Consumer
 import java.util.regex.*
 import groovy.transform.*
 
 @ToString
-class T {
+class T { // T as in Time, because an instance corresponds to different aspects of a single time.
 
     File source
     String name
@@ -55,17 +55,12 @@ class T {
             words.each {out.println it}
         }
     }
-    void index() {
-        writeTo(wordsIn(new File(textFile())),new File(wordsFile()))
-//        println(outFile.toString() + words.toString())
-    }
+    void index() { writeTo(wordsIn(new File(textFile())),new File(wordsFile())) }
 }
 
 class Changes {
     List<T> ts
-    Changes(List<T> ts) {
-        this.ts = ts
-    }
+    Changes(List<T> ts) { this.ts = ts }
 
     void ocr()        { ts.forEach(t -> t.ocr()) }
     void indexFiles() { ts.forEach(t -> t.index()) }
@@ -73,24 +68,6 @@ class Changes {
     Set<File> hours() {
         Set<File> all = new HashSet<>()
         ts.forEach(t -> all.add(t.hourDir()))
-        all
-    }
-
-    Set<File> days() {
-        Set<File> all = new HashSet<>()
-        ts.forEach(t -> all.add(t.dayDir()))
-        all
-    }
-
-    Set<File> months() {
-        Set<File> all = new HashSet<>()
-        ts.forEach(t -> all.add(t.monthDir()))
-        all
-    }
-
-    Set<File> years() {
-        Set<File> all = new HashSet<>()
-        ts.forEach(t -> all.add(t.yearDir()))
         all
     }
 
@@ -125,17 +102,20 @@ class Changes {
     }
 
     void indexHours()  { hours().forEach(f -> generateIndex(f,indicesIn(f))) }
-    void indexDays()   { days().forEach(f -> generateIndex(f)) }
-    void indexMonths() { months().forEach(f -> generateIndex(f)) }
-    void indexYears()  { years().forEach(f -> generateIndex(f)) }
     void indexAll()    { generateIndex(new File(T.recordings())) }
+
+    Set<File> index(java.util.function.Function<T,File> f) {
+        Set<File> files = new HashSet<>()
+        ts.forEach(t -> files.add(f.apply(t)))
+        files.forEach(file -> generateIndex(file))
+    }
 
     void index() {
         indexFiles()
         indexHours()
-        indexDays()
-        indexMonths()
-        indexYears()
+        index(t -> t.dayDir())
+        index(t -> t.monthDir())
+        index(t -> t.yearDir())
         indexAll()
     }
 
