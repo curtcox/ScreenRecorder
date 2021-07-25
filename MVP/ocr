@@ -1,6 +1,7 @@
 #!/usr/bin/env groovy
 import java.util.regex.*
 import groovy.transform.*
+import groovy.io.FileType
 
 @ToString
 class T { // T as in Time, because an instance corresponds to different aspects of a single time.
@@ -20,16 +21,14 @@ class T { // T as in Time, because an instance corresponds to different aspects 
         println outputStream
     }
 
-    static String home() { System.properties['user.home'] }
-    static String recordings() { home() +'/recordings' }
     boolean isScreenShot() {  name.startsWith("Screen Shot") && name.endsWith("png")  }
     void ensureDirectoryExists() { new File(destDir()).mkdirs() }
     String date() { name.substring(12,22) }
     String time() { name.split(' at ')[1].split('M')[0] }
     String destDir() {
-        String[] d = date().split("-")
+        String[] d = date().split(Pattern.quote("-"))
         String[] t = time().split(Pattern.quote("."))
-        recordings() + '/' + d[0] + '/' + d[1] + '/' + d[2] + '/' + t[0].trim()
+        IO.recordings() + '/' + d[0] + '/' + d[1] + '/' + d[2] + '/' + t[0].trim()
     }
     String timeString() {
         name.substring(12,name.length()-4)
@@ -40,6 +39,7 @@ class T { // T as in Time, because an instance corresponds to different aspects 
     }
     String textFile()   { outputbase() + '.txt' }
     String wordsFile()  { outputbase() + '.words' }
+    String imageFile()  { outputbase() + '.png' }
     String outputbase() { destDir() + '/' + timeString() }
     File hourDir()      { new File(destDir()) }
     File dayDir()       { hourDir().parentFile }
@@ -47,7 +47,40 @@ class T { // T as in Time, because an instance corresponds to different aspects 
     File yearDir()      { monthDir().parentFile }
 
     void ocr()  { exec("tesseract",outputbase()) }
-    void move() { exec("mv",outputbase(name + '.png')) }
+    void move() { exec("mv",imageFile()) }
+    void index() { IO.writeTo(IO.wordsIn(new File(textFile())),new File(wordsFile())) }
+}
+
+class WordRef {
+    String text
+    BitSet refs
+    WordRef(String text) { this(text,new BitSet(32)) }
+    WordRef(String text, BitSet refs) {
+        this.text = text
+        this.refs = refs
+    }
+
+    static WordRef read(String line) {
+        String[] parts = line.split(':')
+        String text = parts[0]
+        parts.length == 1 ? new WordRef(text) : new WordRef(text,bitSet(parts[1]))
+    }
+
+    static BitSet bitSet(String hex) { BitSet.valueOf(new long[]{Long.parseLong(hex,16)}) }
+    String write() { text + ':' + Long.toHexString(refs.toLongArray()[0]) }
+
+    WordRef plus(WordRef that) {
+        BitSet either = new BitSet()
+        either.or(refs)
+        either.or(that.refs)
+        new WordRef(text,either)
+    }
+}
+
+class IO {
+
+    static String home() { System.properties['user.home'] }
+    static String recordings() { home() +'/recordings' }
     static String scrub(String s) { s.toLowerCase() }
     static List<String> wordsFrom(File file) { Arrays.asList(file.text.split("[\\p{Punct}\\s]+")).collect { scrub(it)} }
     static Set<String> wordsIn(File file) { new TreeSet(wordsFrom(file)) }
@@ -56,7 +89,44 @@ class T { // T as in Time, because an instance corresponds to different aspects 
             words.each {out.println it}
         }
     }
-    void index() { writeTo(wordsIn(new File(textFile())),new File(wordsFile())) }
+
+    static List<T> newImages() {
+        List<T> changed = new ArrayList<>()
+        for (file in new File(recordings()).listFiles()) {
+            T t = new T(file)
+            if (t.isScreenShot()) {
+                changed.add(t)
+                t.ensureDirectoryExists()
+            }
+        }
+        changed
+    }
+
+    // Screen Shot 2021-07-21 at 9.08.29 AM.png   original format
+    //             2021-07-21_9.08.29_PM.png      translate to this format
+    //             2021-07-21_9.08.29_PM_2.png    translate (n) additional screen suffix to _n
+    static File original(File file) {
+        String   day = file.parentFile.parentFile.name
+        String month = file.parentFile.parentFile.parentFile.name
+        String  year = file.parentFile.parentFile.parentFile.parentFile.name
+        String[] parts = file.name.split(Pattern.quote("_"))
+        String tod   = parts[1]
+        String tail  = parts.length == 3 ? parts[2] : (parts[2] + '_' + parts[3])
+        new File(recordings() + "/Screen Shot $year-$month-$day at $tod $tail")
+    }
+
+    static List<T> alreadyOCRedImages() {
+        def list = []
+        def dir = new File(recordings())
+        dir.eachFileRecurse (FileType.FILES) { file ->
+            String name = file.name
+            if (name.endsWith('.png') && !name.startsWith("Screen Shot")) {
+                list << new T(original(file))
+            }
+        }
+        list
+    }
+
 }
 
 class Changes {
@@ -65,6 +135,7 @@ class Changes {
 
     void ocr()        { ts.forEach(t -> t.ocr()) }
     void indexFiles() { ts.forEach(t -> t.index()) }
+    List<File> listFiles(File dir) { Arrays.asList(dir.listFiles()) }
 
     Set<File> hours() {
         Set<File> all = new HashSet<>()
@@ -74,7 +145,7 @@ class Changes {
 
     List<File> indicesIn(File dir) {
         List<File> out = new ArrayList<>()
-        Arrays.asList(dir.listFiles()).forEach(f -> {
+        listFiles(dir).forEach(f -> {
             if (f.name.endsWith('.words')) {
                 out.add(f)
             }
@@ -84,7 +155,7 @@ class Changes {
 
     List<File> childIndices(File dir) {
         List<File> out = new ArrayList<>()
-        Arrays.asList(dir.listFiles()).forEach(d -> {
+        listFiles(dir).forEach(d -> {
             if (d.isDirectory()) {
                 File words = new File(d.toString() + '/words')
                 if (words.exists()) {
@@ -98,12 +169,12 @@ class Changes {
     void generateIndex(File dir) { generateIndex(dir,childIndices(dir)) }
     void generateIndex(File dir,List<File> files) {
         Set<String> words = new TreeSet<>()
-        files.forEach(f -> words.addAll(T.wordsIn(f)))
-        T.writeTo(words,new File(dir.toString() + '/words'))
+        files.forEach(f -> words.addAll(IO.wordsIn(f)))
+        IO.writeTo(words,new File(dir.toString() + '/words'))
     }
 
     void indexHours()  { hours().forEach(f -> generateIndex(f,indicesIn(f))) }
-    void indexAll()    { generateIndex(new File(T.recordings())) }
+    void indexAll()    { generateIndex(new File(IO.recordings())) }
 
     Set<File> index(java.util.function.Function<T,File> f) {
         Set<File> files = new HashSet<>()
@@ -129,31 +200,12 @@ class Changes {
     void process() {
         ocr()
         index()
-        //move()
+        move()
     }
-}
-
-String home() { System.properties['user.home'] }
-String recordings() { home() +'/recordings' }
-
-List<T> changes() {
-    List<T> changed = new ArrayList<>();
-    for (file in new File(recordings()).listFiles()) {
-        T t = new T(file)
-        if (t.isScreenShot()) {
-            changed.add(t)
-            t.ensureDirectoryExists()
-        }
-    }
-    changed
-}
-
-def go() {
-    new Changes(changes()).process()
 }
 
 def test() {
-    List<T> ts = changes()
+    List<T> ts = IO.newImages()
     println ts
     T t = ts[0]
     println "t = $t"
@@ -167,5 +219,15 @@ def test() {
     println "outputbase = ${t.outputbase()}"
 }
 
-test()
-go()
+def process() { new Changes(IO.newImages()).process() }
+def reindex() { new Changes(IO.alreadyOCRedImages()).index() }
+
+if (args.length == 0) {
+    process()
+} else {
+    String x = args[0].toLowerCase()
+    if (x.startsWith('t')) test()
+    if (x.startsWith('p')) process()
+    if (x.startsWith('r')) reindex()
+}
+println 'done'
