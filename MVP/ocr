@@ -48,32 +48,31 @@ class T { // T as in Time, because an instance corresponds to different aspects 
 
     void ocr()  { exec("tesseract",outputbase()) }
     void move() { exec("mv",imageFile()) }
-    void index() { IO.writeTo(IO.wordsIn(new File(textFile())),new File(wordsFile())) }
+    void index() { IO.writeSetTo(IO.wordsSet(new File(textFile())),new File(wordsFile())) }
 }
 
-class WordRef {
-    String text
+class Refs {
     BitSet refs
-    WordRef(String text) { this(text,new BitSet(32)) }
-    WordRef(String text, BitSet refs) {
-        this.text = text
+    Refs(int bit) {
+        this(new BitSet(32))
+        refs.set(bit)
+    }
+    Refs(BitSet refs) {
         this.refs = refs
     }
 
-    static WordRef read(String line) {
-        String[] parts = line.split(':')
-        String text = parts[0]
-        parts.length == 1 ? new WordRef(text) : new WordRef(text,bitSet(parts[1]))
+    static Refs fromString(String string) {
+        new Refs(bitSet(string))
     }
 
     static BitSet bitSet(String hex) { BitSet.valueOf(new long[]{Long.parseLong(hex,16)}) }
-    String write() { text + ':' + Long.toHexString(refs.toLongArray()[0]) }
+    String toString() { refs.length() == 0 ? "0" : Long.toHexString(refs.toLongArray()[0]) }
 
-    WordRef plus(WordRef that) {
+    Refs plus(Refs that) {
         BitSet either = new BitSet()
         either.or(refs)
         either.or(that.refs)
-        new WordRef(text,either)
+        new Refs(either)
     }
 }
 
@@ -83,10 +82,24 @@ class IO {
     static String recordings() { home() +'/recordings' }
     static String scrub(String s) { s.toLowerCase() }
     static List<String> wordsFrom(File file) { Arrays.asList(file.text.split("[\\p{Punct}\\s]+")).collect { scrub(it)} }
-    static Set<String> wordsIn(File file) { new TreeSet(wordsFrom(file)) }
-    static void writeTo(Set<String> words,File outFile) {
+    static Set<String> wordsSet(File file) { new TreeSet(wordsFrom(file)) }
+//    static Map<String,Refs> wordsMap(File file) {
+//        Map map = new TreeMap()
+//        for (String line : file.text.split('\n')) {
+//            String[] parts = line.split(Pattern.quote(' '))
+//            Ref ref = parts.length > 1 ? Refs.fromString(parts[1]) : new Ref()
+//            map.put(parts[0],ref)
+//        }
+//        map
+//    }
+    static void writeSetTo(Set<String> words,File outFile) {
         outFile.withWriter{ out ->
             words.each {out.println it}
+        }
+    }
+    static void writeMapTo(Map<String,Refs> words,File outFile) {
+        outFile.withWriter{ out ->
+            words.each {out.println "${it.key} ${it.value}"}
         }
     }
 
@@ -168,9 +181,22 @@ class Changes {
 
     void generateIndex(File dir) { generateIndex(dir,childIndices(dir)) }
     void generateIndex(File dir,List<File> files) {
-        Set<String> words = new TreeSet<>()
-        files.forEach(f -> words.addAll(IO.wordsIn(f)))
-        IO.writeTo(words,new File(dir.toString() + '/words'))
+        Map<String,Refs> words = new TreeMap<>()
+        files.forEach(f -> {
+            Set<String> more = IO.wordsSet(f)
+            // println "$f ${f.parentFile} ${f.parentFile.name}"
+            Refs ref = new Refs(Integer.parseInt(f.parentFile.name))
+            more.forEach(
+                    word -> {
+                        if (words.containsKey(word)) {
+                            words.put(word,words.get(word).plus(ref))
+                        } else {
+                            words.put(word,ref)
+                        }
+                    }
+            )
+        })
+        IO.writeMapTo(words,new File(dir.toString() + '/words'))
     }
 
     void indexHours()  { hours().forEach(f -> generateIndex(f,indicesIn(f))) }
