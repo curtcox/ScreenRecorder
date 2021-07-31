@@ -69,10 +69,7 @@ class Refs {
     String toString() { refs.length() == 0 ? "0" : Long.toHexString(refs.toLongArray()[0]) }
 
     Refs plus(Refs that) {
-        BitSet either = new BitSet()
-        either.or(refs)
-        either.or(that.refs)
-        new Refs(either)
+        new Refs(refs | that.refs)
     }
 }
 
@@ -179,24 +176,32 @@ class Changes {
         out
     }
 
+    Refs ref(File file) {
+        String string = (file.name=='words') ? file.parentFile.name : file.name.split(Pattern.quote("."))[1]
+        int value = Integer.parseInt(string)
+        int index = value > 2000 ? value - 2000 : value
+        new Refs(index)
+    }
+
     void generateIndex(File dir) { generateIndex(dir,childIndices(dir)) }
     void generateIndex(File dir,List<File> files) {
         Map<String,Refs> words = new TreeMap<>()
+        File index = new File(dir.toString() + '/words')
         files.forEach(f -> {
             Set<String> more = IO.wordsSet(f)
-            // println "$f ${f.parentFile} ${f.parentFile.name}"
-            Refs ref = new Refs(Integer.parseInt(f.parentFile.name))
+            Refs ref = ref(f)
             more.forEach(
                     word -> {
                         if (words.containsKey(word)) {
-                            words.put(word,words.get(word).plus(ref))
+                            Refs was = words.get(word)
+                            words.put(word,was.plus(ref))
                         } else {
                             words.put(word,ref)
                         }
                     }
             )
         })
-        IO.writeMapTo(words,new File(dir.toString() + '/words'))
+        IO.writeMapTo(words,index)
     }
 
     void indexHours()  { hours().forEach(f -> generateIndex(f,indicesIn(f))) }
