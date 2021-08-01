@@ -1,0 +1,22 @@
+#!/usr/bin/env groovy
+import groovy.io.FileType
+
+String home() { System.properties['user.home'] }
+String recordings() { home() +'/recordings' }
+
+List<File> existingImages() {
+    def list = []
+    def dir = new File(recordings())
+    dir.eachFileRecurse (FileType.FILES) { file ->
+        String name = file.name
+        if (name.endsWith('.png') && !name.startsWith("Screen Shot")) {
+            list << file
+        }
+    }
+    list
+}
+
+if (args.length == 0) {
+    existingImages().forEach(f -> println f)
+}
+println 'done'
