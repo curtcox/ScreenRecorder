@@ -1,1 +1,32 @@
-grep
+#!/usr/bin/env groovy
+
+import com.sun.net.httpserver.*
+
+import java.util.regex.Pattern
+
+int port = 8080
+int backlog = 0
+
+HttpServer.create(new InetSocketAddress(port), backlog).with {
+    println "Server is listening on ${port}, hit Ctrl+C to exit."
+    createContext("/") { http ->
+        // See https://docs.oracle.com/en/java/javase/11/docs/api/jdk.httpserver/com/sun/net/httpserver/HttpExchange.html
+        http.responseHeaders.add("Content-type", "text/html")
+        http.sendResponseHeaders(200, 0)
+        String uri = http.requestURI
+        String value = uri.contains('=') ? uri.split(Pattern.quote('='))[1] : ''
+        http.responseBody.withWriter { out ->
+            out <<
+"""
+<html>
+  <form action="" method="get">
+  <input type="search" name="q" value="$value" required>
+  <input type="submit" value="search">
+</form>
+</html>
+"""
+        }
+    }
+    start()
+}
+
