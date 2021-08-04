@@ -19,40 +19,51 @@ List<File> existingImages() {
     list
 }
 
-void up() {
-    println "up"
-}
+class Viewer {
+    int x = 0
+    int y = 0
+    List<File> files
+    Viewer(List<File> files) {
+        this.files = files
+    }
 
-void down() {
-    println "down"
-}
+    void up() {
+        if (y>0) y = y - 1
+    }
 
-void left() {
-    println "left"
-}
+    void down() {
+        if (y<files.size()-1) y = y + 1
+    }
 
-void right() {
-    println "right"
-}
+    void left() {
+        if (x>0) x = x - 1
+    }
 
-void showImages() {
-    JFrame frame = new JFrame("Recordings")
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
-    frame.setSize(500,500)
-    frame.addKeyListener(new KeyAdapter() {
-        @Override void keyPressed(KeyEvent e) {
-            int code = e.keyCode
-            if (code==KeyEvent.VK_UP)       up()
-            if (code==KeyEvent.VK_DOWN)   down()
-            if (code==KeyEvent.VK_LEFT)   left()
-            if (code==KeyEvent.VK_RIGHT) right()
-        }
-    })
-    frame.setVisible(true)
+    void right() {
+        x = x + 1
+    }
+
+    void showImages() {
+        JFrame frame = new JFrame("Recordings")
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+        frame.setSize(500,500)
+        frame.addKeyListener(new KeyAdapter() {
+            @Override void keyPressed(KeyEvent e) {
+                int code = e.keyCode
+                if (code==KeyEvent.VK_UP)       up()
+                if (code==KeyEvent.VK_DOWN)   down()
+                if (code==KeyEvent.VK_LEFT)   left()
+                if (code==KeyEvent.VK_RIGHT) right()
+                println "($x , $y) ${files.get(y)}"
+            }
+        })
+        frame.setVisible(true)
+    }
 }
 
 if (args.length == 0) {
-    showImages()
+    Viewer viewer = new Viewer(existingImages())
+    viewer.showImages()
 } else {
     existingImages().forEach(f -> println f)
 }
