@@ -1,5 +1,8 @@
 #!/usr/bin/env groovy
 import groovy.io.FileType
+import javax.swing.*
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
 
 String home() { System.properties['user.home'] }
 String recordings() { home() +'/recordings' }
@@ -16,7 +19,41 @@ List<File> existingImages() {
     list
 }
 
+void up() {
+    println "up"
+}
+
+void down() {
+    println "down"
+}
+
+void left() {
+    println "left"
+}
+
+void right() {
+    println "right"
+}
+
+void showImages() {
+    JFrame frame = new JFrame("Recordings")
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+    frame.setSize(500,500)
+    frame.addKeyListener(new KeyAdapter() {
+        @Override void keyPressed(KeyEvent e) {
+            int code = e.keyCode
+            if (code==KeyEvent.VK_UP)       up()
+            if (code==KeyEvent.VK_DOWN)   down()
+            if (code==KeyEvent.VK_LEFT)   left()
+            if (code==KeyEvent.VK_RIGHT) right()
+        }
+    })
+    frame.setVisible(true)
+}
+
 if (args.length == 0) {
+    showImages()
+} else {
     existingImages().forEach(f -> println f)
 }
 println 'done'
