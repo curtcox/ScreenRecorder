@@ -1,8 +1,11 @@
 #!/usr/bin/env groovy
 import groovy.io.FileType
+import java.awt.*
+import java.awt.event.*
+import java.awt.image.*
 import javax.swing.*
-import java.awt.event.KeyAdapter
-import java.awt.event.KeyEvent
+import javax.imageio.*
+import java.util.List
 
 String home() { System.properties['user.home'] }
 String recordings() { home() +'/recordings' }
@@ -19,12 +22,16 @@ List<File> existingImages() {
     list
 }
 
-class Viewer {
+class Viewer extends JFrame {
     int x = 0
     int y = 0
     List<File> files
+    private BufferedImage image
+
     Viewer(List<File> files) {
         this.files = files
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+        setSize(500,500)
     }
 
     void up() {
@@ -43,27 +50,39 @@ class Viewer {
         x = x + 1
     }
 
-    void showImages() {
-        JFrame frame = new JFrame("Recordings")
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
-        frame.setSize(500,500)
-        frame.addKeyListener(new KeyAdapter() {
+    void addKeyListener() {
+        addKeyListener(new KeyAdapter() {
             @Override void keyPressed(KeyEvent e) {
                 int code = e.keyCode
                 if (code==KeyEvent.VK_UP)       up()
                 if (code==KeyEvent.VK_DOWN)   down()
                 if (code==KeyEvent.VK_LEFT)   left()
                 if (code==KeyEvent.VK_RIGHT) right()
-                println "($x , $y) ${files.get(y)}"
+                File file = files.get(y)
+                println "($x , $y) $file"
+                image = ImageIO.read(file)
+                repaint()
             }
         })
-        frame.setVisible(true)
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g)
+        paintImage((Graphics2D) g)
+    }
+
+    private void paintImage(Graphics2D g) {
+        if (image!=null) {
+            g.drawImage(image,0,0,getWidth(),getHeight(),null)
+        }
     }
 }
 
 if (args.length == 0) {
     Viewer viewer = new Viewer(existingImages())
-    viewer.showImages()
+    viewer.addKeyListener()
+    viewer.setVisible(true)
 } else {
     existingImages().forEach(f -> println f)
 }
