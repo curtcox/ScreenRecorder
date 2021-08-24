@@ -26,6 +26,7 @@ class Viewer extends JFrame {
     int x = 0
     int y = 0
     List<File> files
+    private File file
     private BufferedImage image
 
     Viewer(List<File> files) {
@@ -58,7 +59,7 @@ class Viewer extends JFrame {
                 if (code==KeyEvent.VK_DOWN)   down()
                 if (code==KeyEvent.VK_LEFT)   left()
                 if (code==KeyEvent.VK_RIGHT) right()
-                File file = files.get(y)
+                file = files.get(y)
                 println "($x , $y) $file"
                 image = ImageIO.read(file)
                 repaint()
@@ -69,12 +70,27 @@ class Viewer extends JFrame {
     @Override
     public void paint(Graphics g) {
         super.paint(g)
-        paintImage((Graphics2D) g)
+        Graphics2D g2d = (Graphics2D) g
+        paintImage(g2d)
+        paintLabel(g2d)
     }
 
     private void paintImage(Graphics2D g) {
         if (image!=null) {
             g.drawImage(image,0,0,getWidth(),getHeight(),null)
+        }
+    }
+
+    private computeLabel() {
+        file.name.replace('.png','').replace('_',' ')
+    }
+
+    private void paintLabel(Graphics2D g) {
+        if (file!=null) {
+            g.setXORMode(Color.WHITE)
+            int size = 100
+            g.setFont(new Font ("TimesRoman", Font.BOLD | Font.ITALIC, size))
+            g.drawString(computeLabel(),size,size)
         }
     }
 }
