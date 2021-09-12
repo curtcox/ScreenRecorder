@@ -19,7 +19,9 @@ List<File> existingImages() {
             list << file
         }
     }
-    list
+    list.sort({
+        a,b -> a.toString() <=> b.toString()
+    })
 }
 
 class Viewer extends JFrame {
