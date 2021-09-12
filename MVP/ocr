@@ -116,12 +116,12 @@ class IO {
     //             2021-07-21_9.08.29_PM.png      translate to this format
     //             2021-07-21_9.08.29_PM_2.png    translate (n) additional screen suffix to _n
     static File original(File file) {
-        String   day = file.parentFile.parentFile.name
-        String month = file.parentFile.parentFile.parentFile.name
-        String  year = file.parentFile.parentFile.parentFile.parentFile.name
+        String     day = file.parentFile.parentFile.name
+        String   month = file.parentFile.parentFile.parentFile.name
+        String    year = file.parentFile.parentFile.parentFile.parentFile.name
         String[] parts = file.name.split(Pattern.quote("_"))
-        String tod   = parts[1]
-        String tail  = parts.length == 3 ? parts[2] : (parts[2] + '_' + parts[3])
+        String     tod = parts[1]
+        String    tail = parts.length == 3 ? parts[2] : (parts[2] + '_' + parts[3])
         new File(recordings() + "/Screen Shot $year-$month-$day at $tod $tail")
     }
 
