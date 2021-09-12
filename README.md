@@ -33,8 +33,8 @@ The intent is to provide an open solution that can interoperate with things like
 - Cloud storage
 - Lucene, Elasticsearch
 - Alfred, [searchcode](https://github.com/boyter/searchcode-server)
-- [Tesseract](https://github.com/tesseract-ocr/tesseract/blob/master/doc/tesseract.1.asc) [VNRecognizeTextRequest](https://developer.apple.com/documentation/vision/recognizing_text_in_images)
-- others
+- [Tesseract](https://github.com/tesseract-ocr/tesseract/blob/master/doc/tesseract.1.asc), [VNRecognizeTextRequest](https://developer.apple.com/documentation/vision/recognizing_text_in_images)
+- others [hyfen](https://hyfen.net/memex/), [Hunchly](https://www.hunch.ly/)
 
 ## Security
 
