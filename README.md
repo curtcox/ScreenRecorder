@@ -37,7 +37,7 @@ The intent is to provide an open solution that can interoperate with things like
 - browsers [chrome](https://developer.chrome.com/docs/extensions/reference/pageCapture/)
 - proxies [Charles](https://www.charlesproxy.com/), [mitmproxy](https://mitmproxy.org/)
 - [commands](https://unix.stackexchange.com/questions/260162/how-to-track-newly-created-processes-in-linux) [ps](https://github.com/tldr-pages/tldr/blob/main/pages/common/ps.md), [execsnoop](https://github.com/brendangregg/perf-tools)
-- others [hyfen](https://hyfen.net/memex/), [Hunchly](https://www.hunch.ly/)
+- others [hyfen](https://hyfen.net/memex/), [Hunchly](https://www.hunch.ly/), [WorldBrain](https://getmemex.com/)
 
 ## Security
 
